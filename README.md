@@ -7,17 +7,18 @@ A testing site for using Reactjs to build web app for Colby Digital Studies
 
   
 
-Last Updated: July 19, 2021
+Last Updated: 2023.05.30
 
 Created by Ruize Li @ Colby College East Asian Studies
 
+Modified by Blitzen Wang @ Colby College East Asian Studies
   
 
 ## Dependencies
 
 ### Front end
 
-Javascript, html, React js
+JavaScript, HTML, React js
 
 ### Backend
 
@@ -53,14 +54,32 @@ Next, create a new terminal and do `cd cds_test_frontend && npm install` to inst
 
 - MainView
 
-## ToDos
+## Checklist for backend -- updated May 2023
 
- - [x] figure out where to place CSS
- - [ ] use react router to route between different pages
- - [ ] js book-view?
- - [ ] faster inputting excel sheet data
- - [ ] on resource page, embed voyant-tools?
- - [ ] deploy backend at Heroku
- - [ ] deploy the frontend, get a domain name
 
- 
+ - [ ] find a data storing solution that can handle images, pdfs, and text files.
+ - [ ] Connect the data storage to the backend -- time-consuming
+ - [ ] Implement keyword searching 
+   - [ ] Implement cross-file searching
+ - [ ] Decide on the presentation of 
+ - [ ] Implement designer-friendly debugging features
+ - [ ] Implement backend logic for the home page
+ - [ ] Implement backend logic for the teaching & research page
+ - [ ] Implement backend logic for about page
+ - [ ] Implementing APIs for search functionality
+ - [ ] deploy backend at online platform service providers
+ - [ ] embed data analysis tools
+ - [ ] Implementing monitoring strategy once the website goes live
+
+## Checklist for frontend -- updated May 2023
+
+ - [ ] Design and implement the display search result page
+ - [ ] Implement the router for navigating the search results
+ - [ ] Design and implement the presentation page of individual pages/ entire volumes.
+ - [ ] Design the presentation of images and text for each individual page
+ - [ ] Implement the presentation page
+ - [ ] Design and implement the home page
+ - [ ] Design and implement the Teaching & research page
+ - [ ] Refine aesthetics and user experience
+ - [ ] deploy frontend at online platform service providers
+ - [ ] Display data analytics, possibly integrating voyant.

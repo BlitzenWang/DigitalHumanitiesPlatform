@@ -13,6 +13,10 @@ const queryString = require('querystring');
 const LOGIN_PASSWORD = 'lrc';
 const PORT = 5000;
 
+//reroutes search requests to database
+const dbRouter = require("./Database")
+app.use("/search", dbRouter)
+
 
 
 app.use(function(req, res, next) {
@@ -35,7 +39,7 @@ app.use(bodyParser.json());
  * Example: search?keywords=revolution-chairman-party
  */
 app.get('/search', function(req, res) {
-	let keywords = req.query.keywords;			// keywords is a string seperated by '-'
+	let keywords = req.query.keywords;			// keywords is a string separated by '-'
 	list_keywords = keywords.split('-');
 	// if invalid keywords, return error
 	if (Object.keys(keywords).length === 0) {

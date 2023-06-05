@@ -9,6 +9,7 @@ import Highlighter from "react-highlight-words";
 import './style.css'
 
 
+
 // display search results
 function DisplaySearchRes(props) {
     let items = props.data;
@@ -36,7 +37,7 @@ function DisplaySearchRes(props) {
                     <h5>{fNames[i]}</h5>
                 </div>
                 <div style = {{paddingRight: 2+ 'em'}}></div>
-                    <div className="d-flex align-items-around">{<Highlighter
+                    <div className="d-flex  align-items-around">{<Highlighter
                         highlightClassName="YourHighlightClass"
                         searchWords={ query.split(' ') }
                         autoEscape={true}
@@ -56,7 +57,7 @@ function DisplaySearchRes(props) {
         <div className="container">
         <h2 key = {items}> {resCount} Results found..</h2>
             
-            { displayRes.length && displayRes }
+                { displayRes.length && displayRes }
         
         </div>
     );
@@ -80,7 +81,7 @@ const Search = () => {
             setResult(null);
         }
         // query database with the key words input
-        fetch('http://localhost:5000/search?keywords=' + query.replaceAll(' ', '-')) 
+        fetch('http://localhost:5000/search?keywords=' + query.replaceAll(' ', '-'))
             .then(response => {
                 if (response.ok) {
                     console.log('response ok');
