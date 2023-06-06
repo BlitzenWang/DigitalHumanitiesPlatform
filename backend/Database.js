@@ -14,38 +14,38 @@ const pool = mysql.createPool({
     user: 'root',
     password: 'ColbyEAS',
 	database: 'test'
-});
+}).promise();
 
 
-function getData(keywords){
+async function getData(keywords){
     let ans = {};
     for(let key of keywords){
-        const rows = pool.query(`
-                                      SELECT issue_name, issue_time, content
+        const rows = await pool.query(`
+                                      SELECT issue_name, content
                                       FROM ExtractedText
-                                      WHERE content LIKE ?
+                                      WHERE content LIKE ${"\'%".concat(key, "%\'")}
                                       ORDER BY issue_time
-                                      LIMIT 10;
-                                      `, [key]);
-		console.log(rows[0])
+                                      LIMIT 2;
+                                      `);
+
         for (let entry of rows[0]){
             ans[entry.issue_name] = entry
         }
 		
     }
-	console.log("finished fetching from database!")
+
     return ans;
 }
 
 
-router.get("/", (req, res) =>  {
+router.get("/", async (req, res) =>  {
 	let keywords = req.query.keywords;			// keywords is a string separated by '-'
 	list_keywords = keywords.split(' ');
 	// if invalid keywords, return error
 	if (Object.keys(keywords).length === 0) {
 		res.send('no keywords')
 	} else {
-		let ans = getData(list_keywords);
+		let ans = await getData(list_keywords).then(console.log("finished fetching from database!"));
 		/*
 		// iterate through entries
 		for (let key of Object.keys(data)) {
@@ -62,7 +62,7 @@ router.get("/", (req, res) =>  {
 		*/
 		
 		res.json(ans);
-		console.log("ans")
+		console.log(ans)
 		console.log('search code ran! keywords are' + keywords);
 	}
 	

@@ -12,6 +12,7 @@ import './style.css'
 
 // display search results
 function DisplaySearchRes(props) {
+    console.log("reached?")
     let items = props.data;
     let query = props.query;
     const [displayRes, setDisplayRes] = useState([]);
@@ -85,7 +86,7 @@ const Search = () => {
             .then(response => {
                 if (response.ok) {
                     console.log('response ok');
-                    // console.log(response.json())
+                    //console.log(response.json())
                     return response.json();
                   } else {
                     //   console.log(response.status);
