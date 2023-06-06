@@ -15,7 +15,7 @@ const PORT = 5000;
 
 //reroutes search requests to database
 const dbRouter = require("./Database")
-//app.use("/search", dbRouter)
+app.use("/search", dbRouter)
 
 
 

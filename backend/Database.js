@@ -6,27 +6,34 @@
 
 const express = require("express");
 const router = express.Router();
-const mysql = require("mysql");
+const mysql = require("mysql2");
+const dotenv = require("dotenv")
 
-const connection = mysql.createPool({
-    host: "localhost",
-    user: "admin",
-    password: "ColbyEASAdmin",
+const pool = mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: 'ColbyEAS',
 	database: 'test'
-});
+}).promise();
 
 
-connection.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
+async function getData(keywords){
+    let ans = {};
+    for(let key of keywords){
+        const rows = await pool.query(`
+                                      SELECT issue_name, issue_time, content
+                                      FROM ExtractedText
+                                      WHERE content LIKE ?
+                                      ORDER BY issue_time
+                                      LIMIT 20;
+                                      `, [key]);
+        for (let entry of rows[0]){
+            ans[entry.issue_name] = entry
+        }
+    }
+    return ans;
+}
 
-sql = "";
-
-con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("Result: " + result);
-  });
 
 router.get("/", (req, res) =>  {
 	let keywords = req.query.keywords;			// keywords is a string separated by '-'
@@ -35,10 +42,11 @@ router.get("/", (req, res) =>  {
 	if (Object.keys(keywords).length === 0) {
 		res.send('no keywords')
 	} else {
-		let ans = {};
+		let ans = getData(list_keywords);
+		/*
+
 		// iterate through entries
 		for (let key of Object.keys(data)) {
-      		sql = "SELECT"
 			let entry = data[key];
 			// search for key word
 			for (let word of list_keywords) {
@@ -49,8 +57,10 @@ router.get("/", (req, res) =>  {
 				}
 			}
 		}
-		console.log('search code ran! keywords are' + keywords);
+		*/
 		res.json(ans);
+		console.log(ans)
+		console.log('search code ran! keywords are' + keywords);
 	}
 	
 });
