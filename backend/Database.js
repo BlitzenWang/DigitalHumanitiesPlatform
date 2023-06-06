@@ -14,23 +14,26 @@ const pool = mysql.createPool({
     user: 'root',
     password: 'ColbyEAS',
 	database: 'test'
-}).promise();
+});
 
 
-async function getData(keywords){
+function getData(keywords){
     let ans = {};
     for(let key of keywords){
-        const rows = await pool.query(`
+        const rows = pool.query(`
                                       SELECT issue_name, issue_time, content
                                       FROM ExtractedText
                                       WHERE content LIKE ?
                                       ORDER BY issue_time
-                                      LIMIT 20;
+                                      LIMIT 10;
                                       `, [key]);
+		console.log(rows[0])
         for (let entry of rows[0]){
             ans[entry.issue_name] = entry
         }
+		
     }
+	console.log("finished fetching from database!")
     return ans;
 }
 
@@ -44,7 +47,6 @@ router.get("/", (req, res) =>  {
 	} else {
 		let ans = getData(list_keywords);
 		/*
-
 		// iterate through entries
 		for (let key of Object.keys(data)) {
 			let entry = data[key];
@@ -58,8 +60,9 @@ router.get("/", (req, res) =>  {
 			}
 		}
 		*/
+		
 		res.json(ans);
-		console.log(ans)
+		console.log("ans")
 		console.log('search code ran! keywords are' + keywords);
 	}
 	
