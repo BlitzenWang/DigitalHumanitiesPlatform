@@ -62,7 +62,7 @@ router.get("/", async (req, res) =>  {
 		*/
 		
 		res.json(ans);
-		console.log(ans)
+		console.log(ans);
 		console.log('search code ran! keywords are' + keywords);
 	}
 	
