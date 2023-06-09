@@ -57,11 +57,12 @@ Next, create a new terminal and do `cd cds_test_frontend && npm install` to inst
 ## Checklist for backend -- updated May 2023
 
 
- - [ ] find a data storing solution that can handle images, pdfs, and text files.
- - [ ] Connect the data storage to the backend -- time-consuming
- - [ ] Implement keyword searching 
-   - [ ] Implement cross-file searching
- - [ ] Decide on the presentation of 
+ - [x] find a data storing solution that can handle images, pdfs, and text files.
+ - [x] Connect the data storage to the backend -- time-consuming
+ - [x] Implement keyword searching 
+   - [x] Implement cross-file searching
+ - [ ] Decide on the presentation of magazines
+
  - [ ] Implement designer-friendly debugging features
  - [ ] Implement backend logic for the home page
  - [ ] Implement backend logic for the teaching & research page
