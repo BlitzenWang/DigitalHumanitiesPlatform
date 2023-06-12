@@ -23,9 +23,9 @@ function DisplaySearchRes(props) {
     // when data changes, re-render the lists
     useEffect(() => {
         // get the ids, keywords, fNames
-        let ids = Object.keys(items).map((val) => items[val]['issue_name']);
+        let ids = Object.keys(items).map((val) => items[val]['issue_time']);
         let keywords = Object.keys(items).map((val) => items[val]['content']);
-        let fNames = Object.keys(items).map((val) => items[val]['issue_time']);
+        let fNames = Object.keys(items).map((val) => items[val]['issue_name']);
         let temp = [];
 
         console.log(query);
@@ -42,7 +42,8 @@ function DisplaySearchRes(props) {
                         highlightClassName="YourHighlightClass"
                         searchWords={ query.split(' ') }
                         autoEscape={true}
-                        textToHighlight= { keywords[i].slice(keywords[i].indexOf(query[0]) < 25 ? keywords[i].indexOf(query[0]) : 0, keywords[i].length < 25+ keywords[i].indexOf(query[0]) ? keywords[i].length:25+ keywords[i].indexOf(query[0])) }
+                        textToHighlight= { keywords[i].slice(0-20) }
+                        //keywords[i].indexOf(query[0]) < 25 ? keywords[i].indexOf(query[0]) : 0, keywords[i].length < 25+ keywords[i].indexOf(query[0]) ? keywords[i].length:25+ keywords[i].indexOf(query[0])
                     />}</div>
             </div>);
         }
@@ -56,9 +57,9 @@ function DisplaySearchRes(props) {
 
     return (
         <div className="container">
-        <h2 key = {items}> {resCount} Results found..</h2>
+        <h2> {resCount} Results found..</h2>
             
-                { displayRes.length && displayRes }
+                { displayRes.length > 0 ? displayRes : null }
         
         </div>
     );
