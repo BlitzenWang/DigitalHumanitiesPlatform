@@ -6,61 +6,70 @@
  */
 import React, { useState, useEffect, Component } from "react";
 import Highlighter from "react-highlight-words";
-import './style.css'
+import { Link } from 'react-router-dom';
+import './style.css' 
 
 
 
 // display search results
+
 function DisplaySearchRes(props) {
-    console.log("reached?")
-    let items = props.data;
-    let query = props.query;
-    const [displayRes, setDisplayRes] = useState([]);
-    const [resCount, setResCount] = useState(0);
-    
+    const items = props.data;
+    const query = props.query;
+    const keywords = query.split(' ');
+    let displayRes = [];
+    let start = -1
+    let end = -1
+
+    // Iterate over items object
+    for (let key in items) {
+        const item = items[key];
+
+        //boundaries for highlighted text
+        for (let i in keywords){
+            const keywordIndex = item.content.indexOf(keywords[i]);
+            
+            if (keywordIndex !== -1){
+                
+                start = Math.max(0, keywordIndex - 25);
+                end = Math.min(item.content.length, keywordIndex + keywords[i].length + 25);
+                break;
+            }   
+        }
     
 
-    // when data changes, re-render the lists
-    useEffect(() => {
-        // get the ids, keywords, fNames
-        let ids = Object.keys(items).map((val) => items[val]['issue_time']);
-        let keywords = Object.keys(items).map((val) => items[val]['content']);
-        let fNames = Object.keys(items).map((val) => items[val]['issue_name']);
-        let temp = [];
-
-        console.log(query);
-        
-        // generate items for display
-        for (let i = 0; i < keywords.length; i++) {
-            temp.push(
-            <div key = {ids[i]} className = "d-flex justify-content-between" style = {{paddingBottom: 1.5 + 'em'}}>
-                <div className = "d-flex justify-content-start">
-                    <h5>{fNames[i]}</h5>
-                </div>
-                <div style = {{paddingRight: 2+ 'em'}}></div>
-                    <div className="d-flex  align-items-around">{<Highlighter
+        const urlPath = item.file_path.replace('test_data', '').replace(/\\\\/, '/').replace("txt","jpg");
+        displayRes.push(
+            <tr key={item.id}>
+                <a href={`http://localhost:5000/${urlPath}`}>{item.issue_name}</a>
+                <td>
+                    <Highlighter
                         highlightClassName="YourHighlightClass"
                         searchWords={ query.split(' ') }
                         autoEscape={true}
-                        textToHighlight= { keywords[i].slice(0-20) }
-                        //keywords[i].indexOf(query[0]) < 25 ? keywords[i].indexOf(query[0]) : 0, keywords[i].length < 25+ keywords[i].indexOf(query[0]) ? keywords[i].length:25+ keywords[i].indexOf(query[0])
-                    />}</div>
-            </div>);
-        }
-            
-    
-        // update search result counts
-        setResCount(temp.length);
-        // update the searched content for display
-        setDisplayRes(temp);
-     }, [items])
+                        textToHighlight={item.content.slice(start, end)}  // Adjust this as needed
+                    />
+                </td>
+            </tr>
+        );
+    }
 
     return (
         <div className="container">
-        <h2> {resCount} Results found..</h2>
-            
-                { displayRes.length > 0 ? displayRes : null }
-        
+            <h2> {displayRes.length} Results found</h2>
+             {displayRes.length > 0 && (
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Issue Name</th>
+                        <th>Content</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {displayRes}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 }
@@ -68,55 +77,55 @@ function DisplaySearchRes(props) {
 
 
 const Search = () => {
-
     const [query, setQuery] = useState('');
+    //middleware for query to prevent re-rendering
+    const [submittedQuery, setSubmittedQuery] = useState('');
     const [result, setResult] = useState('');
+    const [error, setError] = useState(''); // Added state for handling error message
 
-    // on click: query the data
-    //  store them in state
-    let getData = (e) => {
-        // prevent button from refreshing the page
+    const getData = async (e) => {
         e.preventDefault();
-        // if empty query keywords, do not query db
-        if (query === '') {
+         setSubmittedQuery(query);
+
+        const trimmedQuery = query.trim(); // Trim leading and trailing whitespaces
+        if (trimmedQuery === '') {
             alert('empty keywords!');
-            setResult(null);
+            return; // Return immediately to prevent unnecessary re-render
         }
-        // query database with the key words input
-        fetch('http://localhost:5000/search?keywords=' + query.replaceAll(' ', '-'))
-            .then(response => {
-                if (response.ok) {
-                    console.log('response ok');
-                    console.log(response.json())
-                    return response.json();
-                  } else {
-                    //   console.log(response.status);
-                    throw new Error('fetch failed');
-                  }
-            })
-            .then(data => {
-                if (data === 'error') throw new Error('invalid keywords');
-                // console.log(data);
-                setResult(data);
-            })
-            .catch(err => console.log(err))
+        try {
+            const response = await fetch(`http://localhost:5000/search?keywords=${trimmedQuery.replaceAll(' ', '-')}`);
+            if (!response.ok) {
+                throw new Error('fetch failed');
+            }
+
+            const data = await response.json();
+            if (data === 'error') {
+                throw new Error('invalid keywords');
+            }
+
+            setResult(data);
+            setError(''); // Clear error message
+        } catch (err) {
+            console.error(err);
+            setError(err.message); // Set error message
+            setResult(null); // Clear previous result
+        }
     };
 
-    // handle input change
-    let handleInputChange = (e) => { setQuery(e.target.value)}
-
+    const handleInputChange = (e) => {
+        setQuery(e.target.value)
+    }
 
     return (
-        <form>
+        <form onSubmit={getData}>
             <h4>Input keywords, separated by ' ', and press <code>Enter</code></h4>
             <div className = "d-flex justify-content-between">
-            
-                <input className="form-control" type = 'text' placeholder="Search for..." onChange={ handleInputChange }/>  
-                <button className="btn btn-primary" onClick = { getData } > Search </button>
-
+                <input className="form-control" type='text' placeholder="Search for..." onChange={handleInputChange}/>  
+                <button className="btn btn-primary" type="submit"> Search </button>
             </div>
-            { result && <DisplaySearchRes data = { result } query = {query}  />}
-        </form> 
+            {error && <p>Error: {error}</p>}
+            {result && <DisplaySearchRes data={result} query={submittedQuery} />}
+        </form>
     );
 }
 

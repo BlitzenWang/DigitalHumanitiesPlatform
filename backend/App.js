@@ -11,7 +11,13 @@ const bodyParser = require('body-parser');
 const url = require('url');
 const queryString = require('querystring');
 const LOGIN_PASSWORD = 'lrc';
+const cors = require('cors');
 const PORT = 5000;
+
+
+app.use(cors('http://localhost:3000'));
+//serves static files
+app.use(express.static('test_data'));
 
 //reroutes search requests to database
 const dbRouter = require("./Database")

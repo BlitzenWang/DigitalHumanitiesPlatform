@@ -21,11 +21,10 @@ async function getData(keywords){
     let ans = {};
     for(let key of keywords){
         const rows = await pool.query(`
-                                      SELECT issue_name, content
+                                      SELECT id, file_path, issue_time, issue_name, content
                                       FROM ExtractedText
                                       WHERE content LIKE ${"\'%".concat(key, "%\'")}
-                                      ORDER BY issue_time
-                                      LIMIT 2;
+                                      ORDER BY issue_time;
                                       `);
 
         for (let entry of rows[0]){
@@ -62,7 +61,6 @@ router.get("/", async (req, res) =>  {
 		*/
 		
 		res.json(ans);
-		console.log(ans);
 		console.log('search code ran! keywords are' + keywords);
 	}
 	
