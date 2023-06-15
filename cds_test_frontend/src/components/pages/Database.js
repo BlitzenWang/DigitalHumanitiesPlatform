@@ -20,7 +20,7 @@ function DisplaySearchRes(props) {
     let displayRes = [];
     let start = -1
     let end = -1
-
+    
     // Iterate over items object
     for (let key in items) {
         const item = items[key];
@@ -38,10 +38,18 @@ function DisplaySearchRes(props) {
         }
     
 
-        const urlPath = item.file_path.replace('test_data', '').replace(/\\\\/, '/').replace("txt","jpg");
+        //const urlPath = item.file_path.replace('test_data', '').replace(/\\\\/, '/').replace("txt","jpg");
         displayRes.push(
             <tr key={item.id}>
-                <a href={`http://localhost:5000/${urlPath}`}>{item.issue_name}</a>
+                <a href={`http://localhost:3000/book/${item.issue_name}/page/${item.page_num}`}>
+                    <div style={{ width: '108px', height: '72px' }}>
+                        <img
+                            src={`http://localhost:5000/fetch_file/${item.file_path}`}
+                            alt="Image"
+                            style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        />
+                    </div>
+                </a>
                 <td>
                     <Highlighter
                         highlightClassName="YourHighlightClass"
@@ -53,11 +61,12 @@ function DisplaySearchRes(props) {
             </tr>
         );
     }
-
+    
     return (
         <div className="container">
             <h2> {displayRes.length} Results found</h2>
-             {displayRes.length > 0 && (
+            {/*doesn't render table header when there's no results*/} 
+            {displayRes.length > 0 && (
                 <table>
                     <thead>
                     <tr>
@@ -81,19 +90,24 @@ const Search = () => {
     //middleware for query to prevent re-rendering
     const [submittedQuery, setSubmittedQuery] = useState('');
     const [result, setResult] = useState('');
-    const [error, setError] = useState(''); // Added state for handling error message
+    const [error, setError] = useState(''); 
+    
+
+
 
     const getData = async (e) => {
         e.preventDefault();
-         setSubmittedQuery(query);
+        setSubmittedQuery(query);
+        
 
-        const trimmedQuery = query.trim(); // Trim leading and trailing whitespaces
+
+        const trimmedQuery = query.trim(); 
         if (trimmedQuery === '') {
             alert('empty keywords!');
-            return; // Return immediately to prevent unnecessary re-render
+            return; 
         }
         try {
-            const response = await fetch(`http://localhost:5000/search?keywords=${trimmedQuery.replaceAll(' ', '-')}`);
+            const response = await fetch(`http://localhost:5000/database/search?keywords=${trimmedQuery.replaceAll(' ', '-')}`);
             if (!response.ok) {
                 throw new Error('fetch failed');
             }
@@ -102,16 +116,19 @@ const Search = () => {
             if (data === 'error') {
                 throw new Error('invalid keywords');
             }
+            sessionStorage.setItem('leftSearchPage', 'true');
+            sessionStorage.setItem('searchResults', JSON.stringify(data));
+            sessionStorage.setItem('searchQuery', JSON.stringify(query));
 
             setResult(data);
-            setError(''); // Clear error message
+            setError('');  
         } catch (err) {
             console.error(err);
-            setError(err.message); // Set error message
-            setResult(null); // Clear previous result
+            setError(err.message); 
+            setResult(null); 
         }
     };
-
+    
     const handleInputChange = (e) => {
         setQuery(e.target.value)
     }
@@ -124,6 +141,9 @@ const Search = () => {
                 <button className="btn btn-primary" type="submit"> Search </button>
             </div>
             {error && <p>Error: {error}</p>}
+            {!result && JSON.parse(sessionStorage.getItem('searchResults')) &&
+            <DisplaySearchRes data={JSON.parse(sessionStorage.getItem('searchResults'))} 
+            query={JSON.parse(sessionStorage.getItem('searchQuery'))} />}
             {result && <DisplaySearchRes data={result} query={submittedQuery} />}
         </form>
     );

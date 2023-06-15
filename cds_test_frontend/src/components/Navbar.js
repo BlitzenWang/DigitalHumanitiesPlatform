@@ -14,7 +14,7 @@ const Navbar = () => {
                 <span className="fs-4">Colby Digital Studies</span>
             </a>
             <ul className="nav nav-pills">
-                <li className="nav-item"><a  className="nav-link active" aria-current="page" href = '/'>Home</a></li>
+                <li className="nav-item"><a  className="nav-link" aria-current="page" href = '/'>Home</a></li>
                 <li className="nav-item"><a  className="nav-link" href = '/teachingresearch'>Teaching &amp; Research</a></li>
                 <li className="nav-item"><a  className="nav-link" href = '/database'>Database</a></li>
                 <li className="nav-item"><a  className="nav-link" href = '/resources'>Resources</a></li>

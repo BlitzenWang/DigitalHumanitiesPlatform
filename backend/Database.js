@@ -21,23 +21,36 @@ async function getData(keywords){
     let ans = {};
     for(let key of keywords){
         const rows = await pool.query(`
-                                      SELECT id, file_path, issue_time, issue_name, content
+                                      SELECT id, file_path, issue_time, issue_name, content, page_num
                                       FROM ExtractedText
                                       WHERE content LIKE ${"\'%".concat(key, "%\'")}
-                                      ORDER BY issue_time;
+                                      ORDER BY id;
                                       `);
 
         for (let entry of rows[0]){
-            ans[entry.issue_name] = entry
+            ans[entry.issue_name] = entry;
         }
 		
     }
-
+	console.log(ans);
     return ans;
 }
 
+async function getBook(bookname){
+	let ans = {};
+	const rows = await pool.query(`
+									SELECT id, file_path
+									FROM ExtractedText
+									WHERE issue_name LIKE ${"\'%".concat(bookname, "%\'")}
+									ORDER BY id;
+									`);
+	for (let entry of rows[0]){
+		ans[entry.id] = entry;
+	}
+	return ans;
+}
 
-router.get("/", async (req, res) =>  {
+router.get("/search", async (req, res) =>  {
 	let keywords = req.query.keywords;			// keywords is a string separated by '-'
 	list_keywords = keywords.split(' ');
 	// if invalid keywords, return error
@@ -45,24 +58,16 @@ router.get("/", async (req, res) =>  {
 		res.send('no keywords')
 	} else {
 		let ans = await getData(list_keywords).then(console.log("finished fetching from database!"));
-		/*
-		// iterate through entries
-		for (let key of Object.keys(data)) {
-			let entry = data[key];
-			// search for key word
-			for (let word of list_keywords) {
-				if (entry["keyword"].indexOf(word) > -1) {
-					// if one key word exists, mark and return the item
-					ans[key] = data[key];
-					break;
-				}
-			}
-		}
-		*/
 		
 		res.json(ans);
 		console.log('search code ran! keywords are' + keywords);
 	}
 	
+});
+
+router.get("/getBook", async (req, res) =>{
+	let bookName = req.query.bookName;
+	let ans = await getBook(bookName).then(console.log(`fetched book ${bookName}`));
+	res.json(ans);
 });
 module.exports = router
