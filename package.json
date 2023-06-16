@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mysql": "^2.18.1",
+    "mysql2": "^3.3.3",
+    "react-router-dom": "^6.12.1"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^4.15.0"
+  }
+}

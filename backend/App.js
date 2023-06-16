@@ -11,8 +11,22 @@ const bodyParser = require('body-parser');
 const url = require('url');
 const queryString = require('querystring');
 const LOGIN_PASSWORD = 'lrc';
+const cors = require('cors');
 const PORT = 5000;
 
+
+app.use(cors('http://localhost:3000'));
+app.use("/fetch_file", express.static('test_data'));
+
+
+
+//reroutes search requests to database
+const dbRouter = require("./Database");
+app.use("/database", dbRouter);
+
+
+//const fileServer = require("./FileServer");
+//app.use("/files", fileServer);
 
 
 app.use(function(req, res, next) {
@@ -30,35 +44,7 @@ app.use(bodyParser.json());
 
 
 
-/**
- * Handle search requests
- * Example: search?keywords=revolution-chairman-party
- */
-app.get('/search', function(req, res) {
-	let keywords = req.query.keywords;			// keywords is a string seperated by '-'
-	list_keywords = keywords.split('-');
-	// if invalid keywords, return error
-	if (Object.keys(keywords).length === 0) {
-		res.send('no keywords')
-	} else {
-		let ans = {};
-		// iterate through entries
-		for (let key of Object.keys(data)) {
-			let entry = data[key];
-			// search for key word
-			for (let word of list_keywords) {
-				if (entry["keyword"].indexOf(word) > -1) {
-					// if one key word exists, mark and return the item
-					ans[key] = data[key];
-					break;
-				}
-			}
-		}
-		console.log('search code ran! keywords are' + keywords);
-		res.json(ans);
-	}
-	
-});
+
 
 
 app.get('/adminlogin', (req, res) => {
