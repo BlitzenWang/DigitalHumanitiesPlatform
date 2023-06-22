@@ -9,7 +9,8 @@ import MainView from './components/MainView';
 
 const App = () => {
 	return (
-		<div className="App">
+
+		<div className="App" style={{backgroundColor: 'rgba(113, 165, 189, 1)'}}>
 			<Navbar />
 			<MainView />
 		</div>
