@@ -131,7 +131,7 @@ async function batchGetMagazine(magazineName){
 async function getBook(bookname){
 	let ans = {};
 	const rows = await pool.query(`
-									SELECT id, file_path
+									SELECT id, page_num, file_path
 									FROM ExtractedText
 									WHERE issue_name LIKE ${"\'%".concat(bookname, "%\'")}
 									ORDER BY id;

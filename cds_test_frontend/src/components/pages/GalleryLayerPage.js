@@ -33,10 +33,13 @@ const CustomText = styled('div')(({ theme }) => ({
   margin: `6px 0px 0px 0px`,
 }));
 
-function Page({ image, page }) {
+function Page({ bookName, image, page }) {
   	return (
     	<div>
-      	<Cover src={image} loading="lazy" alt={'Cover'} />
+		<a href = {`/book/${bookName}/page/${page}`}>
+			<Cover src={image} loading="lazy" alt={'Cover'} />
+		</a>
+      	
       	<CustomText>{page}</CustomText>
     	</div>
   	);
@@ -53,6 +56,8 @@ const MagazineContainer = styled('div')({
 function GalleryLayerPage() {
   	const {magazineName, year, issue} = useParams();
   	const [magazineData, setmagazineData] = useState();
+	const bookname = magazineName.concat('_', year, '_', issue);
+	console.log(bookname);
 
   	const fetchData = async () => {
 		const response = await fetch(`http://localhost:5000/database/getMagazine?magazineName=${magazineName}&year=${year}&issue=${issue}`);
@@ -74,7 +79,7 @@ function GalleryLayerPage() {
 		<Canvas>
 			<MagazineContainer>
 			{magazineData && magazineData.map((item, index) => (
-				<Page key={index} image={`http://localhost:5000/fetch_file/${item.file_path}`} page={item.page_num} />
+				<Page key={index} bookName = {bookname} image={`http://localhost:5000/fetch_file/${item.file_path}`} page={item.page_num} />
 			))}
 			</MagazineContainer>
 		</Canvas>

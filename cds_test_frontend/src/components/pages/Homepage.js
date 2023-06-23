@@ -16,7 +16,13 @@ import React from 'react';
 import Rectangle1Image from './images/JFJHB_thumbnail.jpg';
 import Rectangle2Image from './images/MZHB_thumbnail.jpg';
 import Rectangle3Image from './images/RMHB_thumbnail.jpg';
-import { styled } from '@mui/material/styles';
+import styled from 'styled-components';
+
+const Canvas = styled.div`
+  background-color: rgba(113, 165, 189, 1);
+  min-height: 100vh; 
+`;
+
 
 const Frame31 = styled('div')({
   backgroundColor: `rgba(113, 165, 189, 1)`,
@@ -146,47 +152,49 @@ const Info = styled('div')({
 
 function Homepage(props) {
   return (
-    <Frame31 className={props.className}>
-      <MagazineGallery>{`gazine  Gallery`}</MagazineGallery>
-      <MagazineGallery1>{`Magazine Gallery`}</MagazineGallery1>
-      <MazineContainer>
-        <Magazine>
-          <Cover
-            src={Rectangle1Image}
-            loading="lazy"
-            alt={'Rectangle 1'}
-          />
-          <Title>{`解放军画报`}</Title>
-          <Info>
-            {`解放军画报于1951年2月创刊，由毛泽东主席亲笔题写刊名。其前身是红军时期的《红星画报》、抗日战争时期的《晋察冀画报》和解放战争时期的《华北画报》。邓小平、江泽民多次接受本刊记者采访拍摄。`}
-          </Info>
-        </Magazine>
-        <Magazine>
-          <a href="http://localhost:3000/Gallery/RMHB">
+    <Canvas>
+      <Frame31 className={props.className}>
+        <MagazineGallery>{`gazine  Gallery`}</MagazineGallery>
+        <MagazineGallery1>{`Magazine Gallery`}</MagazineGallery1>
+        <MazineContainer>
+          <Magazine>
             <Cover
-              src={Rectangle3Image}
+              src={Rectangle1Image}
               loading="lazy"
-              alt={'Rectangle 3'}
+              alt={'Rectangle 1'}
             />
-          </a>
-          <Title>{`人民画报`}</Title>
-          <Info>
-            {`《人民画报》创刊于1950年7月，是一本以图片报道为主、图文并茂的中华人民共和国国家级综合性画报，为月刊，内容以宣传中国现代建设成就为主。《人民画报》自创办起从未停刊，文化大革命中也照常出版。`}
-          </Info>
-        </Magazine>
-        <Magazine>
-          <Cover
-            src={Rectangle2Image}
-            loading="lazy"
-            alt={'Rectangle 2'}
-          />
-          <Title>{`民族画报`}</Title>
-          <Info>
-            {`民族画报创刊于1956年12月份。作为中国第一本以民族为主题的大型刊物，它致力于展示和传承中国各民族的文化遗产、艺术表达和社会风貌，广泛涵盖了中国各个民族的风土人情、历史传统、习俗民俗、服饰饮食、音乐舞蹈、手工艺等方面。`}
-          </Info>
-        </Magazine>
-      </MazineContainer>
-    </Frame31>
+            <Title>{`解放军画报`}</Title>
+            <Info>
+              {`解放军画报于1951年2月创刊，由毛泽东主席亲笔题写刊名。其前身是红军时期的《红星画报》、抗日战争时期的《晋察冀画报》和解放战争时期的《华北画报》。邓小平、江泽民多次接受本刊记者采访拍摄。`}
+            </Info>
+          </Magazine>
+          <Magazine>
+            <a href="http://localhost:3000/Gallery/RMHB">
+              <Cover
+                src={Rectangle3Image}
+                loading="lazy"
+                alt={'Rectangle 3'}
+              />
+            </a>
+            <Title>{`人民画报`}</Title>
+            <Info>
+              {`《人民画报》创刊于1950年7月，是一本以图片报道为主、图文并茂的中华人民共和国国家级综合性画报，为月刊，内容以宣传中国现代建设成就为主。《人民画报》自创办起从未停刊，文化大革命中也照常出版。`}
+            </Info>
+          </Magazine>
+          <Magazine>
+            <Cover
+              src={Rectangle2Image}
+              loading="lazy"
+              alt={'Rectangle 2'}
+            />
+            <Title>{`民族画报`}</Title>
+            <Info>
+              {`民族画报创刊于1956年12月份。作为中国第一本以民族为主题的大型刊物，它致力于展示和传承中国各民族的文化遗产、艺术表达和社会风貌，广泛涵盖了中国各个民族的风土人情、历史传统、习俗民俗、服饰饮食、音乐舞蹈、手工艺等方面。`}
+            </Info>
+          </Magazine>
+        </MazineContainer>
+      </Frame31>
+    </Canvas>
   );
 }
 
