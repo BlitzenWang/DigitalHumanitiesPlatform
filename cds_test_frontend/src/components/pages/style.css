@@ -207,3 +207,41 @@
     text-align: center;
     color: #888;
 }
+
+
+
+.Canvas {
+  min-height: 100vh;
+}
+
+.Cover {
+  height: 420px;
+  width: 272px;
+  object-fit: cover;
+  align-self: stretch;
+  margin: 0px;
+}
+
+.CustomText {
+  text-align: center;
+  white-space: pre-wrap;
+  font-synthesis: none;
+  color: rgba(47, 47, 47, 1);
+  font-style: normal;
+  font-family: Montserrat;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0px;
+  text-decoration: none;
+  line-height: 25px;
+  text-transform: none;
+  align-self: stretch;
+  margin: 6px 0px 0px 0px;
+}
+
+.MagazineContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding-top: 50px;
+  grid-gap: 20px;
+}

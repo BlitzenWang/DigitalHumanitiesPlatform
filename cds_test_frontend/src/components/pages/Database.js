@@ -135,7 +135,7 @@ const Search = () => {
 
     return (
         <form onSubmit={getData}>
-            <h4>Input keywords, separated by ' ', and press <code>Enter</code></h4>
+            <h4>Search through all of our collections</h4>
             <div className = "d-flex justify-content-between">
                 <input className="form-control" type='text' placeholder="Search for..." onChange={handleInputChange}/>  
                 <button className="btn btn-primary" type="submit"> Search </button>
