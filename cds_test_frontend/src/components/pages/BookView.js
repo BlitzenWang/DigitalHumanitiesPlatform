@@ -1,7 +1,17 @@
 import React, { useEffect, useRef, useState, useCallback, forwardRef  } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import HTMLFlipBook from 'react-pageflip';
-import BookClass from '../BookClass';
+import styled from 'styled-components';
+
+const Canvas = styled.div`
+  background-color: rgba(113, 165, 189, 1);
+  min-height: 100vh; 
+`;
+
+const BookContainer = styled('div')({
+  	
+	paddingTop: '20px',
+});
 
 const Page = forwardRef((props, ref) => {
   return (
@@ -45,7 +55,6 @@ const Book = () => {
     const fetchData = async () => {
       const paths = await getBook(bookName);
       imgPaths = Object.values(paths);
-      console.log(imgPaths[0].file_path)
       setPages(imgPaths.map((image, index) => (
       <Page key={index} src={`http://localhost:5000/fetch_file/${image.file_path}`} />
       )));
@@ -53,7 +62,6 @@ const Book = () => {
     fetchData();
 
     
-    console.log(flipBook.current.pageFlip());
     if (flipBook.current.pageFlip()) {
       flipBook.current.pageFlip().turnToPage(startPage);
     }
@@ -78,7 +86,6 @@ const Book = () => {
     }, []);
   
   
-  
 
   return (
 		<div>
@@ -94,6 +101,9 @@ const Book = () => {
 			showCover={true}
 			mobileScrollSupport={true}
 			onFlip={onPage}
+      onInit={() => {
+      flipBook.current.pageFlip().turnToPage(startPage-1);
+      }}
 			className="demo-book"
 			ref={flipBook}
 			>
@@ -101,7 +111,9 @@ const Book = () => {
     {pages}
       
 			</HTMLFlipBook>
-      <button onClick={toggleZoom}>Zoom</button>
+      <button onClick= {() => {
+      flipBook.current.pageFlip().turnToPage(0);
+      }}>&lt;&lt;</button>
 
 		</div>
   );
@@ -109,9 +121,11 @@ const Book = () => {
 
 const BookView = () => {
   return (
-    <div className="container">
-      <Book/>
-    </div>
+    <Canvas>
+      <BookContainer>
+        <Book/>
+      </BookContainer>
+    </Canvas>
   );
 };
 
