@@ -24,7 +24,7 @@ async function getData(keywords){
                                       SELECT id, file_path, issue_time, issue_name, content, page_num
                                       FROM ExtractedText
                                       WHERE content LIKE ${"\'%".concat(key, "%\'")}
-                                      ORDER BY id;
+                                      ORDER BY page_name;
                                       `);
 
         for (let entry of rows[0]){
@@ -43,11 +43,11 @@ async function getMagazineByIssue(magazineName, year, issue){
 									FROM ExtractedText
 									WHERE issue_name LIKE ${"\'%".concat(magazineName, "%\'")}
 									AND issue_time = ${"\'".concat(year, "-", issue, "\'")}
-									ORDER BY id;
+									ORDER BY page_num;
 									`);
 	console.log("\'".concat(year, "-", issue, "\'"));
 	for (let entry of rows[0]){
-		ans[entry.id] = entry;
+		ans[entry.page_num] = entry;
 	}
 	const trimmedAns = Object.values(ans).map(item => {
     return {
@@ -65,29 +65,32 @@ async function getMagazineByYear(magazineName, year){
 
 
 	const rows = await pool.query(`
-									SELECT id, file_path, issue_time
+									SELECT id, file_path, issue_time, page_name
 									FROM ExtractedText
 									WHERE issue_name LIKE ${"\'%".concat(magazineName, "%\'")}
 									AND issue_time LIKE ${"\'%".concat(year, "%\'")}
-									ORDER BY id;
+									AND page_num = 1
+									ORDER BY issue_time;
 									`);
 
-	for (let entry of rows[0]){
-		data[entry.id] = entry;
+	for (let i = 0; i < rows[0].length; i++) {
+		const entry = rows[0][i];
+		data[i + 1] = entry;
 	}
+	
 	let temp = {};
-
+	console.log(data);
 	Object.values(data).forEach(item => {
 		let time = item.issue_time
-		if (!temp[time] || item.id < temp[time].id) {
+		if (!temp[time] || item.page_name < temp[time].page_name) {
 			temp[time] = item;
 		}
 	});
 
 
 	// Convert result object to array
-	let ans = Object.values(temp);
-	
+	let ans = Object.values(data);
+
 	return ans;
 
 }
@@ -97,10 +100,10 @@ async function batchGetMagazine(magazineName){
 
 
 	const rows = await pool.query(`
-									SELECT id, file_path, issue_time
+									SELECT id, file_path, issue_time, page_name
 									FROM ExtractedText
 									WHERE issue_name LIKE ${"\'%".concat(magazineName, "%\'")}
-									ORDER BY id;
+									ORDER BY page_name;
 									`);
 
 	for (let entry of rows[0]){
@@ -115,7 +118,7 @@ async function batchGetMagazine(magazineName){
 	const newItem = { ...item, issue_time: year };
 
 	
-	if (!temp[year] || item.id < temp[year].id) {
+	if (!temp[year] || item.page_name < temp[year].page_name) {
 		temp[year] = newItem;
 	}
 	});
@@ -134,7 +137,7 @@ async function getBook(bookname){
 									SELECT id, page_num, file_path
 									FROM ExtractedText
 									WHERE issue_name LIKE ${"\'%".concat(bookname, "%\'")}
-									ORDER BY id;
+									ORDER BY page_name;
 									`);
 	for (let entry of rows[0]){
 		ans[entry.id] = entry;
