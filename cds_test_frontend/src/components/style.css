@@ -1,0 +1,201 @@
+.NavBarContainer {
+  background-color: rgba(87, 87, 87, 1);
+  display: flex;
+  position: relative;
+  isolation: isolate;
+  flex-direction: row;
+  width: 100%;
+  height: 25px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 24px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.NavBarItemTitle {
+  text-align: center;
+  white-space: nowrap;
+  font-synthesis: none;
+  color: rgba(113, 165, 189, 1);
+  font-style: normal;
+  font-family: DM Sans;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin: 0px;
+}
+
+.NavBarItemFrame {
+  display: flex;
+  position: relative;
+  isolation: isolate;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0px;
+  box-sizing: border-box;
+  height: 20px;
+  margin: 0px 0px 0px 381px;
+}
+
+.NavBarItem {
+  text-align: center;
+  white-space: nowrap;
+  font-synthesis: none;
+  color: rgba(113, 165, 189, 1);
+  font-style: normal;
+  font-family: DM Sans;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0px;
+  text-decoration: none;
+  line-height: 18px;
+  text-transform: capitalize;
+  margin: 0px;
+  border: 16px solid transparent;
+
+}
+
+.NavBarItem:hover {
+  background-color: rgba(113, 165, 189, 1);
+  color: rgba(220, 220, 207, 1);
+  border-color: rgba(113, 165, 189, 1);
+}
+
+.NavBarItem.active {
+  background-color: rgba(113, 165, 189, 1);
+  color: rgba(255, 255, 255, 1);
+  border-color: rgba(113, 165, 189, 1);
+}
+
+
+.NavBarLi{
+  list-style-type: none;
+  margin-right: 20px;
+}
+
+.HomepageCanvas {
+  background-color: #71a5bd;
+  min-height: 100vh;
+}
+
+.HomepageFrame {
+  background-color: rgba(113, 165, 189, 1);
+  display: flex;
+  position: relative;
+  isolation: isolate;
+  flex-direction: row;
+  width: 100%;
+  height: 836px;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.HomepageTileTextFront {
+  text-align: left;
+  white-space: pre-wrap;
+  font-synthesis: none;
+  color: rgba(220, 220, 207, 1);
+  font-style: normal;
+  font-family: Abhaya Libre;
+  font-weight: 400;
+  font-size: 240px;
+  letter-spacing: -19px;
+  text-decoration: none;
+  text-transform: none;
+  opacity: 0.1;
+  width: 1539.96px;
+  height: 278.36px;
+  position: absolute;
+  left: -10px;
+  top: -90px;
+}
+
+.HomepageTileTextBackground {
+  text-align: left;
+  white-space: pre-wrap;
+  font-synthesis: none;
+  color: rgba(233, 233, 219, 1);
+  font-style: normal;
+  font-family: Abhaya Libre;
+  font-weight: 400;
+  font-size: 82px;
+  letter-spacing: -6px;
+  text-decoration: none;
+  text-transform: none;
+  text-shadow: 0px 2.5px 2.5px rgba(0, 0, 0, 0.25);
+  width: 529px;
+  height: 139px;
+  position: absolute;
+  left: 456px;
+  top: 30px;
+}
+
+.HomepageMazineContainer {
+  display: flex;
+  position: absolute;
+  isolation: isolate;
+  flex-direction: row;
+  justify-content: center;
+  align-items: top;
+  padding: 0px;
+  box-sizing: border-box;
+  top: 250px;
+}
+
+.HomepageMagazine {
+  display: flex;
+  position: relative;
+  isolation: isolate;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0px;
+  box-sizing: border-box;
+  margin: 0px 50px 0px 0px;
+}
+
+.HomepageMagazineCover {
+  height: 383px;
+  width: 296px;
+  margin: 0px;
+}
+
+.HomepageMagazineTitle {
+  text-align: center;
+  white-space: pre-wrap;
+  font-synthesis: none;
+  color: rgba(233, 233, 219, 1);
+  font-style: normal;
+  font-family: Abhaya Libre;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0px;
+  text-decoration: none;
+  text-transform: none;
+  height: 20px;
+  width: 272px;
+  margin: 14px 0px 0px 0px;
+}
+
+.HomepageMagazineInfo {
+  text-align: left;
+  white-space: pre-wrap;
+  font-synthesis: none;
+  color: rgba(233, 233, 219, 1);
+  font-style: normal;
+  font-family: Abhaya Libre;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0px;
+  text-decoration: none;
+  text-transform: none;
+  width: 272px;
+  margin: 14px 0px 0px 0px;
+}

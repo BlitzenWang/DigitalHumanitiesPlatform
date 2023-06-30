@@ -1,56 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
 
 
-const Canvas = styled.div`
-  background-color: rgba(113, 165, 189, 1);
-  min-height: 100vh; 
-`;
-
-const Cover = styled.img`
-  height: 420px;
-  width: 272px;
-  object-fit: cover;
-  align-self: stretch;
-  margin: 0px;
-`;
-
-const CustomText = styled('div')(({ theme }) => ({
-  textAlign: `center`,
-  whiteSpace: `pre-wrap`,
-  fontSynthesis: `none`,
-  color: `rgba(47, 47, 47, 1)`,
-  fontStyle: `normal`,
-  fontFamily: `Montserrat`,
-  fontWeight: `500`,
-  fontSize: `20px`,
-  letterSpacing: `0px`,
-  textDecoration: `none`,
-  lineHeight: `25px`,
-  textTransform: `none`,
-  alignSelf: `stretch`,
-  margin: `6px 0px 0px 0px`,
-}));
 
 function Magazine({ coverImage, name, issue_time }) {
   	return (
-    	<div>
-		<a href= {`http://localhost:3000/Gallery/${name}/${issue_time.replace("-", "/")}`} >
-			<Cover src={coverImage} loading="lazy" alt={'Cover'} />
-		</a>
-      	
-      	<CustomText>{issue_time}</CustomText>
-    	</div>
+		<div>
+			<img className="Cover" src={coverImage} loading="lazy" alt={'Cover'} />
+
+			<div className="CustomText">{issue_time}</div>
+			<div className="button-container">
+				<button className="btn" onClick={() => handleButtonClickBook(name)}>Flipbook</button>
+				<button className="btn" onClick={() => handleButtonClickPage(name, issue_time)}>All Pages</button>
+			</div>
+		</div>
+    	
+    	
   	);
+	
 }
 
-const MagazineContainer = styled('div')({
-  	display: 'grid',
-  	gridTemplateColumns: 'repeat(4, 1fr)',
-	paddingTop: '50px',
-  	gridGap: '20px',  
-});
+const handleButtonClickBook = (name) => {
+	window.location.href = `/book/${name}/page/1`;
+};
+
+const handleButtonClickPage = (name, issue_time) => {
+	window.location.href = `http://localhost:3000/Gallery/${name}/${issue_time.replace("-", "/")}`;
+};
+
 
 
 function GalaryLayerIssues() {
@@ -74,15 +51,19 @@ function GalaryLayerIssues() {
 
 
   	return (
-		<Canvas>
-			<MagazineContainer>
-			{magazineData && magazineData.map((item, index) => (
-				<Magazine key={index} coverImage={`http://localhost:5000/fetch_file/${item.file_path}`} name = {magazineName} issue_time={item.issue_time} />
-			))}
-			</MagazineContainer>
-		</Canvas>
-  	);
+  <div className="Canvas">
+    
+      <div className="MagazineContainer">
+        {magazineData && magazineData.map((item, index) => (
+          <Magazine key={index} coverImage={`http://localhost:5000/fetch_file/${item.file_path}`} name = {magazineName} issue_time={item.issue_time} />
+        ))}
+      </div>
+
+    </div>
+);
+
 }
+
 
 
 export default GalaryLayerIssues;

@@ -18,184 +18,42 @@ import Rectangle2Image from './images/MZHB_thumbnail.jpg';
 import Rectangle3Image from './images/RMHB_thumbnail.jpg';
 import styled from 'styled-components';
 
-const Canvas = styled.div`
-  background-color: rgba(113, 165, 189, 1);
-  min-height: 100vh; 
-`;
-
-
-const Frame31 = styled('div')({
-  backgroundColor: `rgba(113, 165, 189, 1)`,
-  display: `flex`,
-  position: `relative`,
-  isolation: `isolate`,
-  flexDirection: `row`,
-  width: '100%',
-  height: `836px`,
-  justifyContent: `center`,  // Center items horizontally
-  alignItems: `center`,  // Center items vertically
-  padding: `0px`,
-  boxSizing: `border-box`,
-  overflow: `hidden`,
-});
-
-
-const MagazineGallery = styled('div')({
-  textAlign: `left`,
-  whiteSpace: `pre-wrap`,
-  fontSynthesis: `none`,
-  color: `rgba(220, 220, 207, 1)`,
-  fontStyle: `normal`,
-  fontFamily: `Abhaya Libre`,
-  fontWeight: `400`,
-  fontSize: `240px`,
-  letterSpacing: `-19px`,
-  textDecoration: `none`,
-  textTransform: `none`,
-  opacity: `0.1`,
-  width: `1539.96px`,
-  height: `278.36px`,
-  position: `absolute`,
-  left: `-10px`,
-  top: `-90px`,
-});
-
-const MagazineGallery1 = styled('div')({
-  textAlign: `left`,
-  whiteSpace: `pre-wrap`,
-  fontSynthesis: `none`,
-  color: `rgba(233, 233, 219, 1)`,
-  fontStyle: `normal`,
-  fontFamily: `Abhaya Libre`,
-  fontWeight: `400`,
-  fontSize: `82px`,
-  letterSpacing: `-6px`,
-  textDecoration: `none`,
-  textTransform: `none`,
-  textShadow: `0px 2.5px 2.5px rgba(0, 0, 0, 0.25)`,
-  width: `529px`,
-  height: `139px`,
-  position: `absolute`,
-  left: `456px`,
-  top: `30px`,
-});
-
-
-
-const MazineContainer = styled('div')({
-  display: `flex`,
-  position: `absolute`,
-  isolation: `isolate`,
-  flexDirection: `row`,
-  justifyContent: `center`,
-  alignItems: `top`,
-  padding: `0px`,
-  boxSizing: `border-box`,
-
-  top: `250px`,
-});
-
-const Magazine = styled('div')({
-  display: `flex`,
-  position: `relative`,
-  isolation: `isolate`,
-  flexDirection: `column`,
-  justifyContent: `flex-start`,
-  alignItems: `flex-start`,
-  padding: `0px`,
-  boxSizing: `border-box`,
-  margin: `0px 50px 0px 0px`,
-});
-
-const Cover = styled('img')({
-  height: `383px`,
-  width: `296px`,
-  margin: `0px`,
-});
-
-const Title = styled('div')({
-  textAlign: `center`,
-  whiteSpace: `pre-wrap`,
-  fontSynthesis: `none`,
-  color: `rgba(233, 233, 219, 1)`,
-  fontStyle: `normal`,
-  fontFamily: `Abhaya Libre`,
-  fontWeight: `800`,
-  fontSize: `13px`,
-  letterSpacing: `0px`,
-  textDecoration: `none`,
-  textTransform: `none`,
-  height: `20px`,
-  width: `272px`,
-  margin: `14px 0px 0px 0px`,
-});
-
-const Info = styled('div')({
-  textAlign: `left`,
-  whiteSpace: `pre-wrap`,
-  fontSynthesis: `none`,
-  color: `rgba(233, 233, 219, 1)`,
-  fontStyle: `normal`,
-  fontFamily: `Abhaya Libre`,
-  fontWeight: `500`,
-  fontSize: `13px`,
-  letterSpacing: `0px`,
-  textDecoration: `none`,
-  textTransform: `none`,
-  width: `272px`,
-  margin: `14px 0px 0px 0px`,
-});
-
-
 
 
 
 function Homepage(props) {
   return (
-    <Canvas>
-      <Frame31 className={props.className}>
-        <MagazineGallery>{`gazine  Gallery`}</MagazineGallery>
-        <MagazineGallery1>{`Magazine Gallery`}</MagazineGallery1>
-        <MazineContainer>
-          <Magazine>
-            <Cover
-              src={Rectangle1Image}
-              loading="lazy"
-              alt={'Rectangle 1'}
-            />
-            <Title>{`解放军画报`}</Title>
-            <Info>
-              {`解放军画报于1951年2月创刊，由毛泽东主席亲笔题写刊名。其前身是红军时期的《红星画报》、抗日战争时期的《晋察冀画报》和解放战争时期的《华北画报》。邓小平、江泽民多次接受本刊记者采访拍摄。`}
-            </Info>
-          </Magazine>
-          <Magazine>
+    <div className="HomepageCanvas">
+      <div className="HomepageFrame">
+        <div className="HomepageTileTextFront">gazine  Gallery</div>
+        <div className="HomepageTileTextBackground">Magazine Gallery</div>
+        <div className="HomepageMazineContainer">
+          <div className="HomepageMagazine">
+            <img className="HomepageMagazineCover" src={Rectangle1Image} loading="lazy" alt="Rectangle 1" />
+            <div className="HomepageMagazineTitle">解放军画报</div>
+            <div className="HomepageMagazineInfo">
+              解放军画报于1951年2月创刊，由毛泽东主席亲笔题写刊名。其前身是红军时期的《红星画报》、抗日战争时期的《晋察冀画报》和解放战争时期的《华北画报》。邓小平、江泽民多次接受本刊记者采访拍摄。
+            </div>
+          </div>
+          <div className="HomepageMagazine">
             <a href="http://localhost:3000/Gallery/RMHB">
-              <Cover
-                src={Rectangle3Image}
-                loading="lazy"
-                alt={'Rectangle 3'}
-              />
+              <img className="HomepageMagazineCover" src={Rectangle3Image} loading="lazy" alt="Rectangle 3" />
             </a>
-            <Title>{`人民画报`}</Title>
-            <Info>
-              {`《人民画报》创刊于1950年7月，是一本以图片报道为主、图文并茂的中华人民共和国国家级综合性画报，为月刊，内容以宣传中国现代建设成就为主。《人民画报》自创办起从未停刊，文化大革命中也照常出版。`}
-            </Info>
-          </Magazine>
-          <Magazine>
-            <Cover
-              src={Rectangle2Image}
-              loading="lazy"
-              alt={'Rectangle 2'}
-            />
-            <Title>{`民族画报`}</Title>
-            <Info>
-              {`民族画报创刊于1956年12月份。作为中国第一本以民族为主题的大型刊物，它致力于展示和传承中国各民族的文化遗产、艺术表达和社会风貌，广泛涵盖了中国各个民族的风土人情、历史传统、习俗民俗、服饰饮食、音乐舞蹈、手工艺等方面。`}
-            </Info>
-          </Magazine>
-        </MazineContainer>
-      </Frame31>
-    </Canvas>
+            <div className="HomepageMagazineTitle">人民画报</div>
+            <div className="HomepageMagazineInfo">
+              《人民画报》创刊于1950年7月，是一本以图片报道为主、图文并茂的中华人民共和国国家级综合性画报，为月刊，内容以宣传中国现代建设成就为主。《人民画报》自创办起从未停刊，文化大革命中也照常出版。
+            </div>
+          </div>
+          <div className="HomepageMagazine">
+            <img className="HomepageMagazineCover" src={Rectangle2Image} loading="lazy" alt="Rectangle 2" />
+            <div className="HomepageMagazineTitle">民族画报</div>
+            <div className="HomepageMagazineInfo">
+              民族画报创刊于1956年12月份。作为中国第一本以民族为主题的大型刊物，它致力于展示和传承中国各民族的文化遗产、艺术表达和社会风貌，广泛涵盖了中国各个民族的风土人情、历史传统、习俗民俗、服饰饮食、音乐舞蹈、手工艺等方面。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
-
 export default Homepage;

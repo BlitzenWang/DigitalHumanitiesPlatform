@@ -5,7 +5,7 @@ import './style.css';
 
 
 function Page({ bookName, image, page }) {
-  	return (
+  return (
     	<div>
 		<a href = {`/book/${bookName}/page/${page}`}>
 			<img className="Cover" src={image} loading="lazy" alt={'Cover'} />

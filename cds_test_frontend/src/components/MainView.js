@@ -17,10 +17,11 @@
  import { TeachingResearch } from "./pages/TeachingResearch";
  import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
+
 class MainView extends React.Component {
+   
 
-
-    render() {
+     render() {
         // determine the current page
         
         return(
@@ -47,7 +48,5 @@ class MainView extends React.Component {
         );
     }
 }
-
-
 
 export default MainView;

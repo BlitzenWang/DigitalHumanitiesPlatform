@@ -7,8 +7,8 @@
 import React, { useState, useEffect, Component } from "react";
 import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
-import './style.css' 
-
+import './style.css';
+import SideBar from "../SideBar";
 
 
 // display search results
@@ -40,49 +40,76 @@ function DisplaySearchRes(props) {
 
         //const urlPath = item.file_path.replace('test_data', '').replace(/\\\\/, '/').replace("txt","jpg");
         displayRes.push(
-            <tr key={item.id}>
-                <a href={`http://localhost:3000/book/${item.issue_name}/page/${item.page_num}`}>
-                    <div style={{ width: '108px', height: '72px' }}>
-                        <img
-                            src={`http://localhost:5000/fetch_file/${item.file_path}`}
-                            alt="Image"
-                            style={{ maxWidth: '100%', maxHeight: '100%' }}
-                        />
-                    </div>
-                </a>
-                <td>
-                    <Highlighter
-                        highlightClassName="YourHighlightClass"
-                        searchWords={ query.split(' ') }
-                        autoEscape={true}
-                        textToHighlight={item.content.slice(start, end)}  // Adjust this as needed
-                    />
-                </td>
-            </tr>
+            <div className="results-container">
+            {items.map((item, index) => (
+                <ResultItem
+                    key={index}
+                    file_path={item.file_path}
+                    page_name={item.page_name}
+                    keywords={keywords}
+                    highlighted_text={item.content.slice(start, end)}
+                />
+            ))}
+        </div>
         );
     }
     
     return (
-        <div className="container">
+        <div>
             <h2> {displayRes.length} Results found</h2>
-            {/*doesn't render table header when there's no results*/} 
-            {displayRes.length > 0 && (
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Issue Name</th>
-                        <th>Content</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {displayRes}
-                    </tbody>
-                </table>
-            )}
+            <div className="MainContainer">
+                
+                {/*doesn't render table header when there's no results*/} 
+                {displayRes.length > 0 && (
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Issue Name</th>
+                            <th>Content</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {displayRes}
+                        </tbody>
+                    </table>
+                )}
+                <SideBar/>
+            </div>
         </div>
     );
 }
 
+const ResultItem = ({ file_path, page_name, keywords, highlighted_text }) => {
+    const {issue_name, year, issue_number, page_num} = page_name.splite("_")
+    console.log(issue_name, year, issue_number, page_num);
+    return (
+        <div className="search-result-item">
+            <a href={`/book/${item.issue_name}/page/${item.page_num}`}>
+                <div className="search-result-image-frame">
+                    <img className="search-result-image"
+                    src={`http://localhost:5000/fetch_file/${file_path}`}
+                    alt="Image"/>
+                </div>
+            </a>
+            <div className="search-result-text-frame">
+                <div className="search-result-header-frame">
+                    <a href={`/Gallery/${issue_name}`}>
+                        <div className="search-result-magazine-name">{issue_name}</div>
+                    </a>
+                    <div className="search-result-magazine-info"> {year} · issue {issue_number} · Page {page_num}</div>
+                </div>
+                <div className="search-result-highlighted-text">
+                    <Highlighter
+                        highlightClassName="YourHighlightClass"
+                        searchWords={keywords}
+                        autoEscape={true}
+                        textToHighlight={highlighted_text}
+                    />
+                </div>
+            </div>
+        </div>
+    );
+}
 
 
 const Search = () => {

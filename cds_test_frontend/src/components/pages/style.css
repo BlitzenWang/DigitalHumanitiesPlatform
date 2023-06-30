@@ -245,3 +245,140 @@
   padding-top: 50px;
   grid-gap: 20px;
 }
+
+
+.btn {
+  color: white;
+  font-size: 15px;
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  background: rgba(0,0,0,0.7);
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: rgba(255,255,255,0.7);
+  color: black;
+}
+
+.MainContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.time-dropdowns {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.SideBar {
+  position: relative;
+  top: 100px;
+}
+
+.search-result-container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 10px;  /* row-gap column-gap */
+    justify-content: space-between; /* Distribute items evenly */
+}
+
+.search-result-item{
+    flex: 0 0 calc(50% - 5px);  /* Adjust this calculation based on your desired gap */
+    background: #EDEDDF;
+    align-items: flex-start;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    max-width: 711px; 
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.search-result-image-frame{
+    display: flex;
+    width: 95px;
+    overflow: hidden;
+    padding: 3.5px 3px;
+    background: #814141;
+    align-items: flex-start;
+    gap: 10px;
+    flex-shrink: 0;
+    align-self: stretch;
+    flex-wrap: wrap;
+}
+
+.search-result-image{
+    flex: 1 0 0;
+    align-self: stretch;
+}
+.search-result-text-frame{
+    display: flex;
+    padding: 5px;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    align-self: stretch;
+}
+
+.search-result-magazine-name-frame{
+    display: flex;
+    padding: 4px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+}
+
+.search-result-header-frame{
+    display: flex;
+    padding: 3px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+}
+
+.search-result-magazine-name{
+    color: var(--main-black, #2C2C2C);
+    font-size: 19px;
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-decoration-line: underline;
+}
+.search-result-magazine-info{
+    color: var(--search-result-year, #686868);
+    text-align: center;
+    font-size: 18px;
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.search-result-highlighted-text{
+    display: flex;
+    width: 489px;
+    flex-direction: column;
+    color: var(--main-black, #2C2C2C);
+    font-size: 22px;
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.search-result-container{
+    display: inline-flex;
+    overflow: hidden;
+    padding: 6px;
+    background: #A4C8D9;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
