@@ -9,22 +9,26 @@ import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
 import './style.css';
 import SideBar from "../SideBar";
+import PaginationBar from '../PaginationBar';
 
 
 // display search results
 
 function DisplaySearchRes(props) {
+
     const items = props.data;
     const query = props.query;
+    const totalResults = props.totalResults;  // This prop needs to be passed to DisplaySearchRes
     const keywords = query.split(' ');
     let displayRes = [];
-    let start = -1
-    let end = -1
+    let start = -1;
+    let end = -1;
+    
+    
     
     // Iterate over items object
     for (let key in items) {
         const item = items[key];
-
         //boundaries for highlighted text
         for (let i in keywords){
             const keywordIndex = item.content.indexOf(keywords[i]);
@@ -40,67 +44,60 @@ function DisplaySearchRes(props) {
 
         //const urlPath = item.file_path.replace('test_data', '').replace(/\\\\/, '/').replace("txt","jpg");
         displayRes.push(
-            <div className="results-container">
-            {items.map((item, index) => (
-                <ResultItem
-                    key={index}
-                    file_path={item.file_path}
-                    page_name={item.page_name}
-                    keywords={keywords}
-                    highlighted_text={item.content.slice(start, end)}
-                />
-            ))}
-        </div>
+            <ResultItem
+                key={item.id}
+                file_path={item.file_path}
+                page_name={item.page_name}
+                keywords={keywords}
+                highlighted_text={item.content.slice(start, end)}
+            />
         );
     }
     
+    
+
+
     return (
-        <div>
-            <h2> {displayRes.length} Results found</h2>
-            <div className="MainContainer">
-                
-                {/*doesn't render table header when there's no results*/} 
-                {displayRes.length > 0 && (
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Issue Name</th>
-                            <th>Content</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {displayRes}
-                        </tbody>
-                    </table>
-                )}
-                <SideBar/>
-            </div>
+        <div style={{ flex: 3 }} className="search-result-container">
+            {/*doesn't render table header when there's no results*/} 
+            {displayRes.length > 0 && (displayRes)}
         </div>
     );
 }
 
 const ResultItem = ({ file_path, page_name, keywords, highlighted_text }) => {
-    const {issue_name, year, issue_number, page_num} = page_name.splite("_")
-    console.log(issue_name, year, issue_number, page_num);
+    const magazineNameMap = {
+        "RMHB": "人民画报",
+        "JFJHB": "解放军画报",
+        "MZHB": "民族画报"
+    }
+    const info = page_name.split("_");
+    const issue_name = magazineNameMap[info[0]];
+    const year = info[1];
+    const issue_number = parseInt(info[2]);
+    const page_num = info[3];
+
+
     return (
         <div className="search-result-item">
-            <a href={`/book/${item.issue_name}/page/${item.page_num}`}>
-                <div className="search-result-image-frame">
-                    <img className="search-result-image"
-                    src={`http://localhost:5000/fetch_file/${file_path}`}
-                    alt="Image"/>
-                </div>
+            <div className="search-result-image-frame">
+                <a href={`/book/${info[0]}/page/${page_num}`}>
+                <img className="search-result-image"
+                src={`http://localhost:5000/fetch_file/${file_path}`}
+                alt="Image"/>
             </a>
+            </div>
+            
             <div className="search-result-text-frame">
                 <div className="search-result-header-frame">
-                    <a href={`/Gallery/${issue_name}`}>
+                    <a href={`/Gallery/${info[0]}`}>
                         <div className="search-result-magazine-name">{issue_name}</div>
                     </a>
                     <div className="search-result-magazine-info"> {year} · issue {issue_number} · Page {page_num}</div>
                 </div>
                 <div className="search-result-highlighted-text">
                     <Highlighter
-                        highlightClassName="YourHighlightClass"
+                        highlightClassName="search-result-highlight-class"
                         searchWords={keywords}
                         autoEscape={true}
                         textToHighlight={highlighted_text}
@@ -118,23 +115,40 @@ const Search = () => {
     const [submittedQuery, setSubmittedQuery] = useState('');
     const [result, setResult] = useState('');
     const [error, setError] = useState(''); 
+    const [totalPages, setTotalPages] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [selectedMagazine, setSelectedMagazine] = useState("default");
+    const [startTime, setStartTime] = useState('1950');
+    const [endTime, setEndTime] = useState('1970');
+    const [totalResults, setTotalResults] = useState(0);
+    const years = Array.from({ length: 21 }, (_, index) => 1950 + index);
+
+    const pageSize = 20;
     
+    useEffect(() => {
+        if (submittedQuery !== '') {
+            getData(currentPage, selectedMagazine, startTime, endTime);
+        }
+    }, [currentPage, submittedQuery]);
 
 
-
-    const getData = async (e) => {
-        e.preventDefault();
-        setSubmittedQuery(query);
+    const getData = async (page) => {
+        const trimmedQuery = submittedQuery.trim();
+        const params = new URLSearchParams({
+            keywords: trimmedQuery.replaceAll(' ', '-'),
+            page: page,
+            pageSize: pageSize,
+            selectedMagazine: selectedMagazine,
+            startTime: startTime,
+            endTime: endTime
+        }).toString();
         
-
-
-        const trimmedQuery = query.trim(); 
         if (trimmedQuery === '') {
             alert('empty keywords!');
-            return; 
+            return;
         }
         try {
-            const response = await fetch(`http://localhost:5000/database/search?keywords=${trimmedQuery.replaceAll(' ', '-')}`);
+            const response = await fetch(`http://localhost:5000/database/search?${params}`);
             if (!response.ok) {
                 throw new Error('fetch failed');
             }
@@ -144,35 +158,71 @@ const Search = () => {
                 throw new Error('invalid keywords');
             }
             sessionStorage.setItem('leftSearchPage', 'true');
-            sessionStorage.setItem('searchResults', JSON.stringify(data));
-            sessionStorage.setItem('searchQuery', JSON.stringify(query));
+            sessionStorage.setItem('searchResults', JSON.stringify(data.results));
+            sessionStorage.setItem('searchQuery', JSON.stringify(submittedQuery));
+            setTotalResults(data.total);
+            setResult(data.results);
+            setTotalPages(Math.ceil(data.total / pageSize));
 
-            setResult(data);
-            setError('');  
+            setError('');
         } catch (err) {
             console.error(err);
-            setError(err.message); 
-            setResult(null); 
+            setError(err.message);
+            setResult(null);
         }
     };
-    
+
     const handleInputChange = (e) => {
         setQuery(e.target.value)
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setSubmittedQuery(query);
+    }
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    }
+
+
+    useEffect(()=>{
+        result && getData(1);
+    },[selectedMagazine, startTime, endTime] )
+
+
     return (
-        <form onSubmit={getData}>
-            <h4>Search through all of our collections</h4>
-            <div className = "d-flex justify-content-between">
-                <input className="form-control" type='text' placeholder="Search for..." onChange={handleInputChange}/>  
-                <button className="btn btn-primary" type="submit"> Search </button>
-            </div>
-            {error && <p>Error: {error}</p>}
+        <div style={{flexDirection: "column", display: 'flex', alignItems: "center"}}>
+            <form onSubmit={handleSubmit}>
+                <h4>Search through all of our collections</h4>
+                <div className = "d-flex justify-content-between">
+                    <input className="form-control" type='text' placeholder="Search for..." onChange={handleInputChange}/>  
+                    <button className="btn btn-primary" type="submit"> Search </button>
+                </div>
+                {error && <p>Error: {error}</p>}
+            </form>
             {!result && JSON.parse(sessionStorage.getItem('searchResults')) &&
-            <DisplaySearchRes data={JSON.parse(sessionStorage.getItem('searchResults'))} 
-            query={JSON.parse(sessionStorage.getItem('searchQuery'))} />}
-            {result && <DisplaySearchRes data={result} query={submittedQuery} />}
-        </form>
+                <DisplaySearchRes data={JSON.parse(sessionStorage.getItem('searchResults'))} 
+                query={JSON.parse(sessionStorage.getItem('searchQuery'))} />}
+            {result && 
+            <div className="search-result-page-wrapper">
+                <h2> {totalResults} Results found</h2>
+                <div style={{ display: 'flex', justifyContent: 'space-between'}}>
+                    <DisplaySearchRes data={result} totalResults={totalPages * pageSize} query={submittedQuery} />
+                    <div style={{ flex: 1, paddingTop: "50px", paddingLeft: "20px"}}>
+                    <SideBar years={years} 
+                    filterSelectedMagazine={setSelectedMagazine}
+                    filterStartTime={setStartTime}
+                    filterEndTime={setEndTime}/>
+                    </div>
+                </div>
+            </div>
+            
+            }
+            {result && <PaginationBar totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />}
+        </div>
+        
+
     );
 }
 

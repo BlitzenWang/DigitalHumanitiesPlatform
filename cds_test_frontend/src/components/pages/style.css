@@ -285,54 +285,53 @@
 }
 
 .search-result-container{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px 10px;  /* row-gap column-gap */
-    justify-content: space-between; /* Distribute items evenly */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding-top: 50px;
+  grid-gap: 10px;
 }
 
-.search-result-item{
-    flex: 0 0 calc(50% - 5px);  /* Adjust this calculation based on your desired gap */
+.search-result-item {
     background: #EDEDDF;
+    display: flex;
+    padding: 5px;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: flex-start;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    max-width: 711px; 
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    max-width: 711px;  /* If you want to limit the maximum width of each item */
+    height: 151px;
 }
 .search-result-image-frame{
     display: flex;
     width: 95px;
-    overflow: hidden;
-    padding: 3.5px 3px;
+    height: 139px;  
     background: #814141;
-    align-items: flex-start;
-    gap: 10px;
-    flex-shrink: 0;
-    align-self: stretch;
-    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s;
 }
 
 .search-result-image{
-    flex: 1 0 0;
-    align-self: stretch;
+    width:89px;
+    height:133px;
+     /* This will animate the transform property */
 }
+
+
+
+.search-result-image-frame:hover{
+    transform: scale(1.1); /* This will enlarge the image by 10% */
+}
+
 .search-result-text-frame{
     display: flex;
     padding: 5px;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-end;
-    align-self: stretch;
 }
 
-.search-result-magazine-name-frame{
-    display: flex;
-    padding: 4px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-
-}
 
 .search-result-header-frame{
     display: flex;
@@ -343,13 +342,18 @@
 }
 
 .search-result-magazine-name{
-    color: var(--main-black, #2C2C2C);
+    color: rgb(73, 72, 72);
     font-size: 19px;
     font-family: Open Sans;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 600;
     line-height: normal;
     text-decoration-line: underline;
+
+}
+.search-result-magazine-name:hover{
+    color: rgb(9, 101, 163);
+    
 }
 .search-result-magazine-info{
     color: var(--search-result-year, #686868);
@@ -362,23 +366,23 @@
 }
 
 .search-result-highlighted-text{
+    padding-top: 20px;
+    padding-left: 30px;
     display: flex;
-    width: 489px;
+    width: 360px;
     flex-direction: column;
     color: var(--main-black, #2C2C2C);
-    font-size: 22px;
+    font-size: 18px;
     font-family: Open Sans;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
 }
 
-.search-result-container{
-    display: inline-flex;
-    overflow: hidden;
-    padding: 6px;
-    background: #A4C8D9;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+.search-result-highlight-class {
+    background-color: rgba(3, 125, 196, 0.596); /* change this to your desired color */
+}
+
+.search-result-page-wrapper{
+    padding-bottom: 50px;
 }

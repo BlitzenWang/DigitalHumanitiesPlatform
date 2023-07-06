@@ -17,34 +17,82 @@ const pool = mysql.createPool({
 }).promise();
 
 
-async function getData(keywords){
-    let ans = {};
+async function getSearchCount(keywords){
+	
     for(let key of keywords){
-        const rows = await pool.query(`
-                                      SELECT id, file_path, issue_time, issue_name, content, page_num
-                                      FROM ExtractedText
-                                      WHERE content LIKE ${"\'%".concat(key, "%\'")}
-                                      ORDER BY page_name;
-                                      `);
+		for(let magazine of selectedMagazines){
+			const rows = await pool.query(`
+				SELECT COUNT(id)
+				FROM ExtractedText
+				WHERE content LIKE ${"\'%".concat(key, "%\'")}
+				AND issue_name LIKE ${"\'".concat(magazine, "%\'")}
+				AND issue_time >= ${"\'".concat(startTime, "-01\'")}
+				AND issue_time <= ${"\'".concat(endTime, "-12\'")}
+				ORDER BY page_name
+				`);
 
-        for (let entry of rows[0]){
-            ans[entry.issue_name] = entry;
-        }
+
+			count = Object.values(rows[0][0]);
+		}
+    }
+	return count;
+}
+
+async function getSearchData(keywords, page_size, offset, magazine, startTime, endTime){
+    let ans = {};
+	let count = 0;
+    for(let key of keywords){
+
+		const rows = await pool.query(`
+			SELECT id, page_name, file_path, issue_time, issue_name, content, page_num
+			FROM ExtractedText
+			WHERE content LIKE ${"\'%".concat(key, "%\'")}
+			AND issue_name LIKE ${"\'".concat(magazine, "%\'")}
+			AND issue_time >= ${"\'".concat(startTime, "-01\'")}
+			AND issue_time <= ${"\'".concat(endTime, "-12\'")}
+			ORDER BY page_name
+			LIMIT ${page_size}
+			OFFSET ${offset};
+			`);
+
+		for (let entry of rows[0]){
+			ans[entry.page_name] = entry;
+		}
+		
+        
 		
     }
-	console.log(ans);
-    return ans;
+
+	for(let key of keywords){
+
+		const rows = await pool.query(`
+			SELECT COUNT(id)
+			FROM ExtractedText
+			WHERE content LIKE ${"\'%".concat(key, "%\'")}
+			AND issue_name LIKE ${"\'".concat(magazine, "%\'")}
+			AND issue_time >= ${"\'".concat(startTime, "-01\'")}
+			AND issue_time <= ${"\'".concat(endTime, "-12\'")}
+			ORDER BY page_name
+			`);
+
+		console.log(`individual count: ${Object.values(rows[0][0])}`)
+		count += Number(Object.values(rows[0][0]));
+	}
+		
+	console.log(`total count: ${count}`);
+    
+    return [ans, count];
 }
 
 async function getMagazineByIssue(magazineName, year, issue){
 	let ans = {};
 	const rows = await pool.query(`
-									SELECT id, file_path, issue_time, page_num
-									FROM ExtractedText
-									WHERE issue_name LIKE ${"\'%".concat(magazineName, "%\'")}
-									AND issue_time = ${"\'".concat(year, "-", issue, "\'")}
-									ORDER BY page_num;
-									`);
+		SELECT id, file_path, issue_time, page_num
+		FROM ExtractedText
+		WHERE issue_name LIKE ${"\'%".concat(magazineName, "%\'")}
+		AND issue_time = ${"\'".concat(year, "-", issue, "\'")}
+		ORDER BY page_num;
+		`);
 	console.log("\'".concat(year, "-", issue, "\'"));
 	for (let entry of rows[0]){
 		ans[entry.page_num] = entry;
@@ -65,13 +113,13 @@ async function getMagazineByYear(magazineName, year){
 
 
 	const rows = await pool.query(`
-									SELECT id, file_path, issue_time, page_name
-									FROM ExtractedText
-									WHERE issue_name LIKE ${"\'%".concat(magazineName, "%\'")}
-									AND issue_time LIKE ${"\'%".concat(year, "%\'")}
-									AND page_num = 1
-									ORDER BY issue_time;
-									`);
+		SELECT id, file_path, issue_time, page_name
+		FROM ExtractedText
+		WHERE issue_name LIKE ${"\'%".concat(magazineName, "%\'")}
+		AND issue_time LIKE ${"\'%".concat(year, "%\'")}
+		AND page_num = 1
+		ORDER BY issue_time;
+		`);
 
 	for (let i = 0; i < rows[0].length; i++) {
 		const entry = rows[0][i];
@@ -100,11 +148,11 @@ async function batchGetMagazine(magazineName){
 
 
 	const rows = await pool.query(`
-									SELECT id, file_path, issue_time, page_name
-									FROM ExtractedText
-									WHERE issue_name LIKE ${"\'%".concat(magazineName, "%\'")}
-									ORDER BY page_name;
-									`);
+		SELECT id, file_path, issue_time, page_name
+		FROM ExtractedText
+		WHERE issue_name LIKE ${"\'%".concat(magazineName, "%\'")}
+		ORDER BY page_name;
+		`);
 
 	for (let entry of rows[0]){
 		years[entry.id] = entry;
@@ -134,11 +182,11 @@ async function batchGetMagazine(magazineName){
 async function getBook(bookname){
 	let ans = {};
 	const rows = await pool.query(`
-									SELECT id, page_num, file_path
-									FROM ExtractedText
-									WHERE issue_name LIKE ${"\'%".concat(bookname, "%\'")}
-									ORDER BY page_name;
-									`);
+		SELECT id, page_num, file_path
+		FROM ExtractedText
+		WHERE issue_name LIKE ${"\'%".concat(bookname, "%\'")}
+		ORDER BY page_name;
+		`);
 	for (let entry of rows[0]){
 		ans[entry.id] = entry;
 	}
@@ -146,15 +194,21 @@ async function getBook(bookname){
 }
 
 router.get("/search", async (req, res) =>  {
-	let keywords = req.query.keywords;			// keywords is a string separated by '-'
+	let keywords = req.query.keywords;
+	let page = req.query.page;
+	let pageSize = req.query.pageSize;
+	let selectedMagazines = req.query.selectedMagazine === 'default' ? '' : req.query.selectedMagazine;
+	let startTime = req.query.startTime;
+	let endTime = req.query.endTime;
+
 	list_keywords = keywords.split(' ');
 	// if invalid keywords, return error
 	if (Object.keys(keywords).length === 0) {
 		res.send('no keywords')
 	} else {
-		let ans = await getData(list_keywords).then(console.log("finished fetching from database!"));
-		
-		res.json(ans);
+		let [ans, count] = await getSearchData(list_keywords, pageSize, (page-1)*pageSize, selectedMagazines, startTime, endTime).then(
+		console.log("finished fetching from database!"));
+		res.json({results: ans, total: count});
 		console.log('search code ran! keywords are' + keywords);
 	}
 	
