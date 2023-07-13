@@ -1,7 +1,12 @@
 {
   "dependencies": {
+    "body-parser": "^1.20.2",
+    "highlight.js": "^11.8.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.3.3",
+    "openai": "^3.3.0",
+    "react-contenteditable": "^3.3.7",
+    "react-markdown": "^8.0.7",
     "react-router-dom": "^6.12.1"
   },
   "devDependencies": {

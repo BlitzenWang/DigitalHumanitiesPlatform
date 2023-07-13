@@ -15,6 +15,8 @@ const cors = require('cors');
 const PORT = 5000;
 
 
+
+
 app.use(cors('http://localhost:3000'));
 app.use("/fetch_file", express.static('test_data'));
 
@@ -23,7 +25,8 @@ app.use("/fetch_file", express.static('test_data'));
 //reroutes search requests to database
 const dbRouter = require("./Database");
 app.use("/database", dbRouter);
-
+const chatRouter = require("./ChatBot");
+app.use("/chatbot", chatRouter);
 
 //const fileServer = require("./FileServer");
 //app.use("/files", fileServer);
