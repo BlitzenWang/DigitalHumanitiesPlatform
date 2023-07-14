@@ -2,14 +2,18 @@ import { useState } from 'react';
 import PromptInput from "../components/PromptInput";
 import './style.css';
 import PromptResponseList from "../components/PromptResponseList";
+import caretIcon from '../components/icons/dropdown-list-arrow.png'
+
+
 
 const ChatBot = () => {
   const [responseList, setResponseList] = useState([]);
   const [prompt, setPrompt] = useState('');
   const [promptToRetry, setPromptToRetry] = useState(null);
   const [uniqueIdToRetry, setUniqueIdToRetry] = useState(null);
-  const [modelValue, setModelValue] = useState('gpt');
+  const [modelValue, setModelValue] = useState('gpt-3.5');
   const [isLoading, setIsLoading] = useState(false);
+  const [modelSelectOpen, setModelSelectOpen] = useState(false);
   let loadInterval;
 
   const generateUniqueId = () => {
@@ -74,6 +78,14 @@ const ChatBot = () => {
   }
 
   const getGPTResult = async (_promptToRetry, _uniqueIdToRetry) => {
+
+    //prevents usage of gpt-4
+    if(modelValue == 'gpt-4'){
+      alert("this model is currently unavailable");
+      return;
+    }
+
+
     const _prompt = _promptToRetry ?? htmlToText(prompt);
 
     if (isLoading || !_prompt) {
@@ -127,6 +139,27 @@ const ChatBot = () => {
 
   return (
     <div className="chatbot-page">
+      <div className='model-select-container' >
+          <button 
+          className={`model-select-item ${modelValue === "gpt-3.5" ? 'selected' : ''}`}
+          onClick={() => {
+          setModelValue('gpt-3.5');
+          setModelSelectOpen(false);}}>
+          GPT-3.5
+          </button>
+          <button 
+          className={`model-select-item ${modelValue === "gpt-4" ? 'selected' : ''}`}
+          onClick={() => {
+          setModelValue('gpt-4');
+          setModelSelectOpen(false);}}>
+          GPT-4
+          </button>
+        </div>
+      {responseList.length==0 && (
+        <div id="chatbpt-background-text">
+          Powered  By  ChatGPT
+        </div>
+      )}
       <div id="response-list">
         <PromptResponseList responseList={responseList} key="response-list"/>
       </div>
@@ -137,14 +170,7 @@ const ChatBot = () => {
           </button>
         </div>
       )}
-      <div id="model-select-container">
-        <label htmlFor="model-select">Select model:</label>
-        <select id="model-select" value={modelValue} onChange={(event) => setModelValue(event.target.value)}>
-          <option value="gpt-3.5">GPT-3.5 (Fast response for simpler tasks)</option>
-          <option value="gpt-4">GPT-4 (Use this to burn through our funds in no time)</option>
-          
-        </select>
-      </div>
+
       <div id="input-container">
         <PromptInput
           prompt={prompt}

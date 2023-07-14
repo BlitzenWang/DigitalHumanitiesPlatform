@@ -27,7 +27,7 @@ const Navbar = () => {
         <a href="/about" className="NavBarItem">About</a>
       </li>
       <li className="NavBarLi">
-        <a href="/admin" className="NavBarItem">Admin</a>
+        <a href="/Chat" className="NavBarItem">Chatbot</a>
       </li>
       <li className="NavBarLi">
         <div id="google_translate_element" />

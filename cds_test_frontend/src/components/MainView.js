@@ -26,7 +26,7 @@ class MainView extends React.Component {
         
         return(
             <Router>
-                <div className="container">
+                <div>
 
                 <Switch>
                     <Route exact path = '/'>                    <Homepage/>             </Route>

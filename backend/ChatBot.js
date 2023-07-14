@@ -31,7 +31,7 @@ router.post('/get-prompt-result', async (req, res) => {
             model:'gpt-3.5-turbo', // model name
             messages: [
             {role: "system", content: "Please respond with markdown format."},
-            {role: "user", content: "Hi"}],
+            {role: "user", content: `${prompt}`}],
         });
         console.log(completion.data.choices[0].message);
         // Send the generated text as the response

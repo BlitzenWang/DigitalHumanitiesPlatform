@@ -121,6 +121,8 @@ const Search = () => {
     const [startTime, setStartTime] = useState('1950');
     const [endTime, setEndTime] = useState('1970');
     const [totalResults, setTotalResults] = useState(0);
+    const [selectMode, setSelectMode] = useState(false);
+    const [selectedEntries, setSelectedEntries] = useState([]);
     const years = Array.from({ length: 21 }, (_, index) => 1950 + index);
 
     const pageSize = 20;
