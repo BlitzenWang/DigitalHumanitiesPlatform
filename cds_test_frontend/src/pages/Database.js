@@ -1,15 +1,13 @@
-/**
- * Database page
- * CSS by Boostrap 5.0
- * provides search and fitler functionalities
- * Author: Ruize Li
- */
+
 import React, { useState, useEffect, Component } from "react";
 import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
 import './style.css';
 import SideBar from "../components/SideBar";
 import PaginationBar from '../components/PaginationBar';
+import { useContext } from "react";
+import SelectedFilesSidebar from '../components/SelectedFilesSidebar';
+import { ListContext } from "../components/ListProvider";
 
 
 // display search results
@@ -18,18 +16,18 @@ function DisplaySearchRes(props) {
 
     const items = props.data;
     const query = props.query;
-    const totalResults = props.totalResults;  // This prop needs to be passed to DisplaySearchRes
+    const totalResults = props.totalResults;  
     const keywords = query.split(' ');
+    const selectMode = props.selectMode;
+    const setSelectMode = props.setSelectMode;
     let displayRes = [];
     let start = -1;
     let end = -1;
     
     
     
-    // Iterate over items object
     for (let key in items) {
         const item = items[key];
-        //boundaries for highlighted text
         for (let i in keywords){
             const keywordIndex = item.content.indexOf(keywords[i]);
             
@@ -42,13 +40,14 @@ function DisplaySearchRes(props) {
         }
     
 
-        //const urlPath = item.file_path.replace('test_data', '').replace(/\\\\/, '/').replace("txt","jpg");
         displayRes.push(
             <ResultItem
-                key={item.id}
+                key={item.page_name}
                 file_path={item.file_path}
                 page_name={item.page_name}
                 keywords={keywords}
+                selectMode={selectMode}
+                setSelectMode={setSelectMode}
                 highlighted_text={item.content.slice(start, end)}
             />
         );
@@ -65,21 +64,52 @@ function DisplaySearchRes(props) {
     );
 }
 
-const ResultItem = ({ file_path, page_name, keywords, highlighted_text }) => {
+const ResultItem = (props) => {
     const magazineNameMap = {
         "RMHB": "人民画报",
         "JFJHB": "解放军画报",
         "MZHB": "民族画报"
     }
-    const info = page_name.split("_");
+    const info = props.page_name.split("_");
     const issue_name = magazineNameMap[info[0]];
+    const file_path = props.file_path;
     const year = info[1];
     const issue_number = parseInt(info[2]);
     const page_num = info[3];
+    const keywords = props.keywords;
+    const highlighted_text = props.highlighted_text;
+    const selectMode = props.selectMode;
+    const setSelectMode = props.setSelectMode;
+    const { list, setList }  = useContext(ListContext);   
+    const [selected, setSelected] = useState(list.some(item => item.page_name === props.page_name));
 
+    
+   
+
+    const selectFile = () => {
+        if (selectMode){
+            if (selected){
+                let updatedList = list.filter(item => !(item.page_name === props.page_name));
+                setList(updatedList);
+            }
+            else{
+                const page_info = {
+                    name: info[0],
+                    page_name: props.page_name,
+                    year: year,
+                    issue: issue_name,
+                    page: page_num
+                }
+                setList([...list, page_info]);
+
+            }
+            setSelected(!selected);
+        }
+    }
 
     return (
-        <div className="search-result-item">
+        <div className={`search-result-item`}  onClick={selectFile}>
+            {selectMode && <button className={`search-result-item-mask ${selected? "selected":""}`}/>}
             <div className="search-result-image-frame">
                 <a href={`/book/${info[0]}/page/${page_num}`}>
                 <img className="search-result-image"
@@ -122,9 +152,9 @@ const Search = () => {
     const [endTime, setEndTime] = useState('1970');
     const [totalResults, setTotalResults] = useState(0);
     const [selectMode, setSelectMode] = useState(false);
-    const [selectedEntries, setSelectedEntries] = useState([]);
     const years = Array.from({ length: 21 }, (_, index) => 1950 + index);
-
+    const contextValue = useContext(ListContext);
+    const { list, setList } = contextValue;
     const pageSize = 20;
     
     useEffect(() => {
@@ -194,24 +224,23 @@ const Search = () => {
 
 
     return (
-        <div style={{flexDirection: "column", display: 'flex', alignItems: "center"}}>
+        <div style={{flexDirection: "column", display: 'flex', alignItems: "center", width: "100%"}}>
             <form onSubmit={handleSubmit}>
                 <h4>Search through all of our collections</h4>
-                <div className = "d-flex justify-content-between">
+                <div style={{flexDirection: "row", display: 'flex',  marginLeft: "80px"}}>
                     <input className="form-control" type='text' placeholder="Search for..." onChange={handleInputChange}/>  
                     <button className="btn btn-primary" type="submit"> Search </button>
                 </div>
                 {error && <p>Error: {error}</p>}
             </form>
-            {!result && JSON.parse(sessionStorage.getItem('searchResults')) &&
-                <DisplaySearchRes data={JSON.parse(sessionStorage.getItem('searchResults'))} 
-                query={JSON.parse(sessionStorage.getItem('searchQuery'))} />}
+            
             {result && 
             <div className="search-result-page-wrapper">
                 <h2> {totalResults} Results found</h2>
-                <div style={{ display: 'flex', justifyContent: 'space-between'}}>
-                    <DisplaySearchRes data={result} totalResults={totalPages * pageSize} query={submittedQuery} />
-                    <div style={{ flex: 1, paddingTop: "50px", paddingLeft: "20px"}}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: "20px"}}>
+                    <SelectedFilesSidebar select={selectMode} setSelect={setSelectMode}/>
+                    <DisplaySearchRes data={result} totalResults={totalPages * pageSize} query={submittedQuery} selectMode={selectMode} setSelectMode={setSelectMode}/>
+                    <div style={{ flex: 1, paddingTop: "50px"}}>
                     <SideBar years={years} 
                     filterSelectedMagazine={setSelectedMagazine}
                     filterStartTime={setStartTime}
@@ -221,7 +250,7 @@ const Search = () => {
             </div>
             
             }
-            {result && <PaginationBar totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />}
+            {totalPages>0 && <PaginationBar totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />}
         </div>
         
 
@@ -231,7 +260,7 @@ const Search = () => {
 
 function Database() {
     return (
-        <div className="container">
+        <div>
             <Search />
         </div>
     );
