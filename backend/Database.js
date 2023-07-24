@@ -7,12 +7,12 @@
 const express = require("express");
 const router = express.Router();
 const mysql = require("mysql2");
-const dotenv = require("dotenv")
+require("dotenv").config();
 
 const pool = mysql.createPool({
     host: 'localhost',
-    user: 'root',
-    password: 'ColbyEAS',
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
 	database: 'test'
 }).promise();
 
@@ -79,7 +79,6 @@ async function getSearchData(keywords, page_size, offset, magazine, startTime, e
 		count += Number(Object.values(rows[0][0]));
 	}
 		
-	console.log(`total count: ${count}`);
     
     return [ans, count];
 }

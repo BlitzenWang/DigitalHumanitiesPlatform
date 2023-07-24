@@ -7,7 +7,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 const cors = require('cors');
-
+const FetchList = require('./FetchListContent');
 const bodyParser = require('body-parser');
 
 router.use(bodyParser.json());
@@ -17,21 +17,27 @@ router.use(cors());
 
 router.post('/get-prompt-result', async (req, res) => {
     // Get the prompt from the request body
-    const { prompt, model = 'gpt' } = req.body;
+    const { prompt, model = 'gpt', magazineList } = req.body;
     // Check if prompt is present in the request
     if (!prompt) {
         // Send a 400 status code and a message indicating that the prompt is missing
         return res.status(400).send({error: 'Prompt is missing in the request'});
     }
 
+    const listContent = await FetchList.fetchContent(magazineList);
+
     try {
+        let messages=[{role: "system", content: "You are a specialist at Chinese Magazines. Respond with markdown format."},
+                        {role: "user", content: "I will present you the text from a number of magazines. Read the content, and answer my questions."}];
+        messages = [...messages, ...listContent.map((magazine, id) => (
+            {role: "user", content: `Magazine ${id+1}: ${magazine.content}`}
+        ))];
+        messages = [...messages, {role: "user", content: `${prompt}`}]
         // Use the OpenAI SDK to create a completion
         // with the given prompt, model and maximum tokens
         const completion = await openai.createChatCompletion({
-            model:'gpt-3.5-turbo', // model name
-            messages: [
-            {role: "system", content: "Please respond with markdown format."},
-            {role: "user", content: `${prompt}`}],
+            model:'gpt-3.5-turbo-16k', // model name
+            messages: messages,
         });
         console.log(completion.data.choices[0].message);
         // Send the generated text as the response

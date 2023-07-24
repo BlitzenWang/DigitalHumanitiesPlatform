@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import PromptInput from "../components/PromptInput";
 import './style.css';
 import PromptResponseList from "../components/PromptResponseList";
 import caretIcon from '../components/icons/dropdown-list-arrow.png'
+import { ListContext } from "../components/ListProvider";
 
 
 
@@ -13,9 +14,10 @@ const ChatBot = () => {
   const [uniqueIdToRetry, setUniqueIdToRetry] = useState(null);
   const [modelValue, setModelValue] = useState('gpt-3.5');
   const [isLoading, setIsLoading] = useState(false);
-  const [modelSelectOpen, setModelSelectOpen] = useState(false);
-  let loadInterval;
+  const { list, setList }  = useContext(ListContext);   
 
+  let loadInterval;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
   const generateUniqueId = () => {
     const timestamp = Date.now();
     const randomNumber = Math.random();
@@ -108,12 +110,13 @@ const ChatBot = () => {
 
     try {
 		console.log(`prompt is ${_prompt}`);
+    console.log(list);
 		const response = await fetch('http://localhost:5000/chatbot/get-prompt-result', {
 			method: 'POST', // Specify the HTTP method as POST
 			headers: {
 				'Content-Type': 'application/json', // Set the appropriate Content-Type header
 			},
-			body: JSON.stringify({ prompt: _prompt, model: modelValue }), // Convert the request data to JSON string
+			body: JSON.stringify({ prompt: _prompt, model: modelValue, magazineList: list }), // Convert the request data to JSON string
 			});
 		const data = await response.json();
 		document.getElementById(uniqueId).textContent = '';
@@ -139,22 +142,20 @@ const ChatBot = () => {
 
   return (
     <div className="chatbot-page">
-      <div className='model-select-container' >
+      {responseList.length<1 && <div className='model-select-container' >
           <button 
           className={`model-select-item ${modelValue === "gpt-3.5" ? 'selected' : ''}`}
           onClick={() => {
-          setModelValue('gpt-3.5');
-          setModelSelectOpen(false);}}>
+          setModelValue('gpt-3.5');}}>
           GPT-3.5
           </button>
           <button 
           className={`model-select-item ${modelValue === "gpt-4" ? 'selected' : ''}`}
           onClick={() => {
-          setModelValue('gpt-4');
-          setModelSelectOpen(false);}}>
+          setModelValue('gpt-4');}}>
           GPT-4
           </button>
-        </div>
+        </div>}
       {responseList.length==0 && (
         <div id="chatbpt-background-text">
           Powered  By  ChatGPT

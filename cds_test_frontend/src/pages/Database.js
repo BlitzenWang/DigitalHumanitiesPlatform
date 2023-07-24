@@ -107,6 +107,8 @@ const ResultItem = (props) => {
         }
     }
 
+    useEffect(() => {setSelected(list.some(item => item.page_name === props.page_name))}, [list]);
+
     return (
         <div className={`search-result-item`}  onClick={selectFile}>
             {selectMode && <button className={`search-result-item-mask ${selected? "selected":""}`}/>}
@@ -192,6 +194,8 @@ const Search = () => {
             sessionStorage.setItem('leftSearchPage', 'true');
             sessionStorage.setItem('searchResults', JSON.stringify(data.results));
             sessionStorage.setItem('searchQuery', JSON.stringify(submittedQuery));
+            sessionStorage.setItem('currentPage', page);
+            
             setTotalResults(data.total);
             setResult(data.results);
             setTotalPages(Math.ceil(data.total / pageSize));
@@ -225,7 +229,7 @@ const Search = () => {
 
     return (
         <div style={{flexDirection: "column", display: 'flex', alignItems: "center", width: "100%"}}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}style={{display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px", marginBottom: "10px"}}>
                 <h4>Search through all of our collections</h4>
                 <div style={{flexDirection: "row", display: 'flex',  marginLeft: "80px"}}>
                     <input className="form-control" type='text' placeholder="Search for..." onChange={handleInputChange}/>  
@@ -238,13 +242,13 @@ const Search = () => {
             <div className="search-result-page-wrapper">
                 <h2> {totalResults} Results found</h2>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: "20px"}}>
-                    <SelectedFilesSidebar select={selectMode} setSelect={setSelectMode}/>
+                    {totalPages>0 && <SelectedFilesSidebar select={selectMode} setSelect={setSelectMode}/>}
                     <DisplaySearchRes data={result} totalResults={totalPages * pageSize} query={submittedQuery} selectMode={selectMode} setSelectMode={setSelectMode}/>
                     <div style={{ flex: 1, paddingTop: "50px"}}>
-                    <SideBar years={years} 
+                    {totalPages>0 && <SideBar years={years} 
                     filterSelectedMagazine={setSelectedMagazine}
                     filterStartTime={setStartTime}
-                    filterEndTime={setEndTime}/>
+                    filterEndTime={setEndTime}/>}
                     </div>
                 </div>
             </div>

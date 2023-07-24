@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ListContext } from "./ListProvider";
 import { ChevronDown, Trash } from 'react-feather';
 
@@ -17,15 +17,19 @@ const MagazineDropdown = ({magazineName, selectedFiles, deleteFile})=>{
 				<div className="selected-document-magazine-dropdown-text">{magazineNameMap[magazineName]}</div>
 				<ChevronDown className={`selected-document-chevron ${open ? "open":""}`}/>
 			</div>
-			{open && <div className="selected-document-item-container">
+			{<div className={`selected-document-content-container ${open? "open":""}`} style={{display: "flex", flexDirection: "row"}}>
 				<div className="selected-documents-side-indent"/>
-				{selectedFiles.map(file => (
-					<div className="selected-document-item" key={file.page_name}>
-						{file.year} · {file.issue} · {file.page}
-						<Trash className="selected-document-delete-icon" onClick={() => {deleteFile(file.page_name)}}/>
-					</div>
-				))}
-				</div>}
+				<div className={`selected-document-item-container ${open? "open":""}` }>
+					<div className="selected-documents-side-indent"/>
+					{selectedFiles.map(file => (
+						<div className="selected-document-item" key={file.page_name}>
+							{file.year} · {file.issue} · {file.page}
+							<Trash className="selected-document-delete-icon" onClick={() => {deleteFile(file.page_name)}}/>
+						</div>
+					))}
+				</div>
+			</div>}
+			
 
 		</div>
 	);
@@ -38,7 +42,7 @@ function SelectedFilesSidebar({select, setSelect}){
 	let RMHBArray = list.filter(item => item.name === 'RMHB');
 	let JFJHBArray = list.filter(item => item.name === 'JFJHB');
 	console.log(RMHBArray);
-
+	//useEffect(()=>{console.log(list)},[list]);
 	const deleteFile = (pageName) => {
         // Filter the selected magazine's array to exclude the selected file
         let updatedList = list.filter(item => !(item.page_name === pageName));

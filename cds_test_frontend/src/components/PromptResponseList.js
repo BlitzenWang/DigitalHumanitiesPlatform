@@ -14,6 +14,7 @@ const PromptResponseList = ({ responseList }) => {
 
   useEffect(() => {
     hljs.highlightAll();
+    console.log(responseList);
   }, [responseList]);
 
   return (

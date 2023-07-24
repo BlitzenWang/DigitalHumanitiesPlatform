@@ -28,6 +28,20 @@
   color: #61dafb;
 }
 
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.7);
+    border-radius: 20px;  
+    border: transparent;
+  }
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
