@@ -2,10 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import caretIcon from './icons/dropdown-list-arrow.png'
 
-function SideBar({years, filterSelectedMagazine, filterStartTime, filterEndTime}) {
-  const [selectedMagazine, setSelectedMagazine] = useState('default');
-  const [startTime, setStartTime] = useState('1950');
-  const [endTime, setEndTime] = useState('1970');
+function SideBar(props) {
+  const years = props.years;
+  const filterSelectedMagazine = props.filterSelectedMagazine;
+  const filterStartTime = props.filterStartTime;
+  const filterEndTime = props.filterEndTime;
+  const [selectedMagazine, setSelectedMagazine] = useState(props.currentMagazine);
+  const [startTime, setStartTime] = useState(props.currentStart);
+  const [endTime, setEndTime] = useState(props.currentEnd);
 
   function Dropdown() {
     const [open, setOpen] = useState(false);
@@ -128,6 +132,9 @@ function SideBar({years, filterSelectedMagazine, filterStartTime, filterEndTime}
       filterSelectedMagazine(selectedMagazine);
       filterStartTime(startTime);
       filterEndTime(endTime);
+      sessionStorage.setItem('filterMagazineName', selectedMagazine);
+			sessionStorage.setItem('filterStartTime', startTime);
+			sessionStorage.setItem('filterEndTime', endTime);
     };
     return (
     <button className='dropdown-button-submit'

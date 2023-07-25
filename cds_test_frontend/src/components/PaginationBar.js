@@ -1,4 +1,5 @@
 import React from 'react';
+import { ChevronsLeft, ChevronsRight, ChevronLeft, ChevronRight } from 'react-feather';
 
 function getCurrentPages(totalPages, currentPage) {
     let len = totalPages.length;
@@ -34,9 +35,8 @@ function PaginationBar({ totalPages, currentPage, onPageChange }) {
             className={`pagination-button-direction ${1 === currentPage ? 'disabled' : ''}`}
             onClick={() => onPageChange(1)}
         >
-          <span className={`pagination-button-direction-text`}>
-                {'<<'}
-          </span>
+          <ChevronsLeft className={`pagination-button-direction-text`}/>
+
         </button>
       <button
             key={1}
@@ -44,9 +44,8 @@ function PaginationBar({ totalPages, currentPage, onPageChange }) {
             className={`pagination-button-direction ${1 === currentPage ? 'disabled' : ''}`}
             onClick={() => onPageChange(currentPage-1)}
         >
-          <span className={`pagination-button-direction-text`}>
-                {'<'}
-          </span>
+          <ChevronLeft className={`pagination-button-direction-text`}/>
+
         </button>
       {pages.map(page => (
         <button
@@ -66,9 +65,8 @@ function PaginationBar({ totalPages, currentPage, onPageChange }) {
             className={`pagination-button-direction ${len-1 === currentPage ? 'disabled' : ''}`}
             onClick={() => onPageChange(currentPage+1)}
         >
-          <span className={`pagination-button-direction-text`}>
-                {'>'}
-          </span>
+          <ChevronRight className={`pagination-button-direction-text`}/>
+
         </button>
       <button
             key={len+2}
@@ -76,9 +74,8 @@ function PaginationBar({ totalPages, currentPage, onPageChange }) {
             className={`pagination-button-direction ${len-1 === currentPage ? 'disabled' : ''}`}
             onClick={() => onPageChange(len-1)}
         >
-          <span className={`pagination-button-direction-text`}>
-                {'>>'}
-          </span>
+          <ChevronsRight className={`pagination-button-direction-text`}/>
+
         </button>
     </div>
   );

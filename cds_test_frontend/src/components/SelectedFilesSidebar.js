@@ -36,7 +36,7 @@ const MagazineDropdown = ({magazineName, selectedFiles, deleteFile})=>{
 
 }
 
-function SelectedFilesSidebar({select, setSelect}){
+function SelectedFilesSidebar({select, setSelect, selectAvailable=true}){
 	const { list, setList }  = useContext(ListContext);   
 	let MZHBArray = list.filter(item => item.name === 'MZHB');
 	let RMHBArray = list.filter(item => item.name === 'RMHB');
@@ -52,9 +52,9 @@ function SelectedFilesSidebar({select, setSelect}){
     }
 	return (
 		<div className="selected-documents-sidebar-container">
-			<button className="selected-documents-header" onClick={() => setSelect(!select)}>
+			{selectAvailable && setSelect !== null && <button className="selected-documents-header" onClick={() => setSelect(!select)}>
 			{select ? "Finish  Selecting" : "Select Magazines"}
-			</button>
+			</button>}
 			<div className="selected-documents-divider"/>
 			<div className="selected-documents-top-container">
 				{RMHBArray.length>0 &&  <MagazineDropdown magazineName={"RMHB"} selectedFiles={RMHBArray} deleteFile={deleteFile}/>}

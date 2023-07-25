@@ -2,8 +2,9 @@ import { useState, useContext } from 'react';
 import PromptInput from "../components/PromptInput";
 import './style.css';
 import PromptResponseList from "../components/PromptResponseList";
-import caretIcon from '../components/icons/dropdown-list-arrow.png'
+import SelectedFilesSidebar from '../components/SelectedFilesSidebar';
 import { ListContext } from "../components/ListProvider";
+import { Menu } from 'react-feather';
 
 
 
@@ -15,10 +16,11 @@ const ChatBot = () => {
   const [modelValue, setModelValue] = useState('gpt-3.5');
   const [isLoading, setIsLoading] = useState(false);
   const { list, setList }  = useContext(ListContext);   
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   let loadInterval;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-  const generateUniqueId = () => {
+  
+     const generateUniqueId = () => {
     const timestamp = Date.now();
     const randomNumber = Math.random();
     const hexadecimalString = randomNumber.toString(16);
@@ -171,6 +173,12 @@ const ChatBot = () => {
           </button>
         </div>
       )}
+
+      <Menu className={`show-files-folder-button ${sidebarOpen? "open":""}`} onClick = {() => setSidebarOpen(!sidebarOpen)}/>
+      <div className={`chat-page-sidebar-container ${sidebarOpen? "open":""}`}>
+        <SelectedFilesSidebar select={null} setSelect={null} selectAvailable={false} />
+      </div>
+      
 
       <div id="input-container">
         <PromptInput

@@ -6,7 +6,8 @@
 import React from "react";
 import Homepage from "../pages/Homepage";
 import Resources from "../pages/Resources";
-import Database from "../pages/Database";
+import Search from "../pages/Search";
+import SearchResult from "../pages/SearchResult"
 import About from "../pages/About";
 import Admin from "./Admin";
 import BookView from "../pages/BookView"
@@ -32,8 +33,8 @@ class MainView extends React.Component {
                     <Route exact path = '/'>                    <Homepage/>             </Route>
                     <Route exact path = '/resources'>           <Resources/>            </Route>
                     <Route exact path = '/teachingresearch'>    <TeachingResearch/>     </Route>
-                    <Route exact path = '/database/:keyword'>   <Database/>             </Route>
-                    <Route exact path = '/database'>            <Database/>             </Route>
+                    <Route exact path = '/search'>              <Search/>               </Route>
+                    <Route exact path = '/results'>             <SearchResult/>         </Route>
                     <Route exact path = '/about'>               <About/>                </Route>
                     <Route exact path = '/admin'>               <Admin/>                </Route>
                     <Route path="/book/:bookName/page/:startPage"> <BookView/>          </Route>

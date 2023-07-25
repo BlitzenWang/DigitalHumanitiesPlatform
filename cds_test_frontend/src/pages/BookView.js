@@ -3,29 +3,20 @@ import { useParams, useHistory } from 'react-router-dom';
 import HTMLFlipBook from 'react-pageflip';
 import styled from 'styled-components';
 
-const Canvas = styled.div`
-  background-color: rgba(113, 165, 189, 1);
-  min-height: 100vh; 
-`;
-
-const BookContainer = styled('div')({
-  	
-	paddingTop: '20px',
-});
 
 const Page = forwardRef((props, ref) => {
   return (
     <div 
       className="page" 
       ref={ref} 
-      style={{ transform: `scale(${props.zoom})` }}
+      
     >
-      <div className="page-content">
+      <div className="page-content" style={{width: '100%', height: '100%' }}>
         <img 
           src={props.src} 
           alt="" 
           className="page-image" 
-          style={{ objectFit: 'contain', width: '93%', height: '93%' }}
+          style={{ objectFit: 'fill', width: '100%', height: '100%' }}
         />
       </div>
     </div>
@@ -69,17 +60,7 @@ const Book = () => {
     
   }, [bookName, flipBook]);
 
-  const [zoom, setZoom] = useState(1);
 
-  const toggleZoom = () => {
-    setZoom(zoom === 1 ? 2 : 1);
-  }
-
-  useEffect(() => {
-    {imgPaths.map((image, index) => (
-          <Page key={index} src={`http://localhost:5000/fetch_file/${image.file_path}`} zoom={zoom} />
-      ))}
-  }, [zoom])
 
   const onPage = useCallback((e) => {
         console.log('Current page: ' + e.data);
@@ -88,7 +69,7 @@ const Book = () => {
   
 
   return (
-		<div>
+		<div className='flipbook-wrapper'>
 			<HTMLFlipBook
 			width={550}
 			height={733}
@@ -121,11 +102,7 @@ const Book = () => {
 
 const BookView = () => {
   return (
-    <Canvas>
-      <BookContainer>
-        <Book/>
-      </BookContainer>
-    </Canvas>
+    <Book/>
   );
 };
 

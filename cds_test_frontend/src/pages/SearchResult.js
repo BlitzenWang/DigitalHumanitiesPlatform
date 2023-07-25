@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, Component } from "react";
 import Highlighter from "react-highlight-words";
-import { Link } from 'react-router-dom';
+import { Link, useParams, useHistory, useLocation  } from 'react-router-dom';
 import './style.css';
 import SideBar from "../components/SideBar";
 import PaginationBar from '../components/PaginationBar';
@@ -52,12 +52,12 @@ function DisplaySearchRes(props) {
             />
         );
     }
-    
+
     
 
 
     return (
-        <div style={{ flex: 3 }} className="search-result-container">
+        <div className="search-result-container">
             {/*doesn't render table header when there's no results*/} 
             {displayRes.length > 0 && (displayRes)}
         </div>
@@ -74,7 +74,7 @@ const ResultItem = (props) => {
     const issue_name = magazineNameMap[info[0]];
     const file_path = props.file_path;
     const year = info[1];
-    const issue_number = parseInt(info[2]);
+    const issue_number = info[2];
     const page_num = info[3];
     const keywords = props.keywords;
     const highlighted_text = props.highlighted_text;
@@ -97,7 +97,7 @@ const ResultItem = (props) => {
                     name: info[0],
                     page_name: props.page_name,
                     year: year,
-                    issue: issue_name,
+                    issue: issue_number,
                     page: page_num
                 }
                 setList([...list, page_info]);
@@ -113,7 +113,7 @@ const ResultItem = (props) => {
         <div className={`search-result-item`}  onClick={selectFile}>
             {selectMode && <button className={`search-result-item-mask ${selected? "selected":""}`}/>}
             <div className="search-result-image-frame">
-                <a href={`/book/${info[0]}/page/${page_num}`}>
+                <a href={`/book/${info[0]}_${year}_${issue_number}/page/${page_num}`}>
                 <img className="search-result-image"
                 src={`http://localhost:5000/fetch_file/${file_path}`}
                 alt="Image"/>
@@ -142,27 +142,34 @@ const ResultItem = (props) => {
 
 
 const Search = () => {
+	const location = useLocation();
+	const queryParams = new URLSearchParams(location.search);
+	const searchKeyword = queryParams.get("query");
     const [query, setQuery] = useState('');
     //middleware for query to prevent re-rendering
-    const [submittedQuery, setSubmittedQuery] = useState('');
+    const [submittedQuery, setSubmittedQuery] = useState(searchKeyword);
     const [result, setResult] = useState('');
     const [error, setError] = useState(''); 
     const [totalPages, setTotalPages] = useState(0);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [selectedMagazine, setSelectedMagazine] = useState("default");
-    const [startTime, setStartTime] = useState('1950');
-    const [endTime, setEndTime] = useState('1970');
+    const [currentPage, setCurrentPage] = useState(sessionStorage.getItem('currentPage') ?? 1);
+    const [selectedMagazine, setSelectedMagazine] = useState(sessionStorage.getItem('filterMagazineName') ?? "default");
+    const [startTime, setStartTime] = useState(sessionStorage.getItem('filterStartTime') ?? '1950');
+    const [endTime, setEndTime] = useState(sessionStorage.getItem('filterEndTime') ??'1970');
     const [totalResults, setTotalResults] = useState(0);
     const [selectMode, setSelectMode] = useState(false);
     const years = Array.from({ length: 21 }, (_, index) => 1950 + index);
-    const contextValue = useContext(ListContext);
-    const { list, setList } = contextValue;
     const pageSize = 20;
+	
+
     
+
+
+
     useEffect(() => {
         if (submittedQuery !== '') {
-            getData(currentPage, selectedMagazine, startTime, endTime);
+            getData(currentPage);
         }
+		sessionStorage.setItem('currentPage', currentPage);
     }, [currentPage, submittedQuery]);
 
 
@@ -191,8 +198,6 @@ const Search = () => {
             if (data === 'error') {
                 throw new Error('invalid keywords');
             }
-            sessionStorage.setItem('leftSearchPage', 'true');
-            sessionStorage.setItem('searchResults', JSON.stringify(data.results));
             sessionStorage.setItem('searchQuery', JSON.stringify(submittedQuery));
             sessionStorage.setItem('currentPage', page);
             
@@ -214,6 +219,10 @@ const Search = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+		sessionStorage.setItem('currentPage', 1);
+        setSelectedMagazine("default");
+        setStartTime("1950");
+        setEndTime("1970");
         setSubmittedQuery(query);
     }
 
@@ -232,7 +241,7 @@ const Search = () => {
             <form onSubmit={handleSubmit}style={{display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px", marginBottom: "10px"}}>
                 <h4>Search through all of our collections</h4>
                 <div style={{flexDirection: "row", display: 'flex',  marginLeft: "80px"}}>
-                    <input className="form-control" type='text' placeholder="Search for..." onChange={handleInputChange}/>  
+                    <input className="form-control" type='text' placeholder={submittedQuery} onChange={handleInputChange}/>  
                     <button className="btn btn-primary" type="submit"> Search </button>
                 </div>
                 {error && <p>Error: {error}</p>}
@@ -244,10 +253,13 @@ const Search = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: "20px"}}>
                     {totalPages>0 && <SelectedFilesSidebar select={selectMode} setSelect={setSelectMode}/>}
                     <DisplaySearchRes data={result} totalResults={totalPages * pageSize} query={submittedQuery} selectMode={selectMode} setSelectMode={setSelectMode}/>
-                    <div style={{ flex: 1, paddingTop: "50px"}}>
+                    <div style={{ flex: 1, paddingTop: "20px"}}>
                     {totalPages>0 && <SideBar years={years} 
+					currentMagazine={selectedMagazine}
                     filterSelectedMagazine={setSelectedMagazine}
+					currentStart={startTime}
                     filterStartTime={setStartTime}
+                    currentEnd={endTime}
                     filterEndTime={setEndTime}/>}
                     </div>
                 </div>
@@ -262,7 +274,7 @@ const Search = () => {
 }
 
 
-function Database() {
+function SearchResult() {
     return (
         <div>
             <Search />
@@ -271,4 +283,4 @@ function Database() {
 }
 
 
-export default Database;
+export default SearchResult;

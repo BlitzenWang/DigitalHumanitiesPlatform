@@ -10,7 +10,7 @@ function Magazine({ coverImage, name, issue_time }) {
 
 			<div className="CustomText">{issue_time}</div>
 			<div className="button-container">
-				<button className="btn" onClick={() => handleButtonClickBook(name)}>Flipbook</button>
+				<button className="btn" onClick={() => handleButtonClickBook(name, issue_time)}>Flipbook</button>
 				<button className="btn" onClick={() => handleButtonClickPage(name, issue_time)}>All Pages</button>
 			</div>
 		</div>
@@ -20,12 +20,12 @@ function Magazine({ coverImage, name, issue_time }) {
 	
 }
 
-const handleButtonClickBook = (name) => {
-	window.location.href = `/book/${name}/page/1`;
+const handleButtonClickBook = (name, issue_time) => {
+	window.location.href = `/book/${name}_${issue_time.replace("-", "_")}/page/1`;
 };
 
 const handleButtonClickPage = (name, issue_time) => {
-	window.location.href = `http://localhost:3000/Gallery/${name}/${issue_time.replace("-", "/")}`;
+	window.location.href = `/Gallery/${name}/${issue_time.replace("-", "/")}`;
 };
 
 
