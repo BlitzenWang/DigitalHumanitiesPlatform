@@ -37,6 +37,8 @@ const getBook = async (bookName) => {
 const Book = () => {
   const { bookName, startPage } = useParams();
   const flipBook = useRef();
+  const inputRef = useRef();
+
   const [pages, setPages] = useState();
   let imgPaths = [];
 
@@ -53,10 +55,7 @@ const Book = () => {
     fetchData();
 
     
-    if (flipBook.current.pageFlip()) {
-      flipBook.current.pageFlip().turnToPage(startPage);
-    }
-    
+   
     
   }, [bookName, flipBook]);
 
@@ -66,6 +65,13 @@ const Book = () => {
         console.log('Current page: ' + e.data);
     }, []);
   
+  const setCurrentPage = (e) => {
+    e.preventDefault();
+    const p = parseInt(inputRef.current.value)>pages.length ? pages.length:parseInt(inputRef.current.value);
+    console.log(p);
+
+    flipBook.current.pageFlip().turnToPage(p-1);
+  }
   
 
   return (
@@ -88,13 +94,16 @@ const Book = () => {
 			className="demo-book"
 			ref={flipBook}
 			>
-
     {pages}
       
 			</HTMLFlipBook>
-      <button onClick= {() => {
-      flipBook.current.pageFlip().turnToPage(0);
-      }}>&lt;&lt;</button>
+      
+      <form onSubmit={setCurrentPage} style={{position: 'fixed', bottom: '15px', right: '15px', gap: "10px", margin: '10px'}}>
+          <div style={{flexDirection: "row", display: 'flex',  marginLeft: "80px"}}>
+              <input ref={inputRef} className="form-control" type='text' placeholder="Go to page"/>  
+              <button className="btn btn-primary" type="submit"> Go </button>
+          </div>
+      </form>
 
 		</div>
   );

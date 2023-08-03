@@ -25,11 +25,12 @@ function Homepage(props) {
   return (
     <div className="HomepageCanvas">
       <div className="HomepageFrame">
-        <div className="HomepageTileTextFront">gazine  Gallery</div>
         <div className="HomepageTileTextBackground">Magazine Gallery</div>
         <div className="HomepageMazineContainer">
           <div className="HomepageMagazine">
-            <img className="HomepageMagazineCover" src={Rectangle1Image} loading="lazy" alt="Rectangle 1" />
+            <a href="http://localhost:3000/Gallery/JFJHB">
+              <img className="HomepageMagazineCover" src={Rectangle1Image} loading="lazy" alt="Rectangle 1" />
+            </a>
             <div className="HomepageMagazineTitle">解放军画报</div>
             <div className="HomepageMagazineInfo">
               解放军画报于1951年2月创刊，由毛泽东主席亲笔题写刊名。其前身是红军时期的《红星画报》、抗日战争时期的《晋察冀画报》和解放战争时期的《华北画报》。邓小平、江泽民多次接受本刊记者采访拍摄。
@@ -45,7 +46,10 @@ function Homepage(props) {
             </div>
           </div>
           <div className="HomepageMagazine">
-            <img className="HomepageMagazineCover" src={Rectangle2Image} loading="lazy" alt="Rectangle 2" />
+            <a href="http://localhost:3000/Gallery/MZHB">
+              <img className="HomepageMagazineCover" src={Rectangle2Image} loading="lazy" alt="Rectangle 2" />  
+            </a>
+
             <div className="HomepageMagazineTitle">民族画报</div>
             <div className="HomepageMagazineInfo">
               民族画报创刊于1956年12月份。作为中国第一本以民族为主题的大型刊物，它致力于展示和传承中国各民族的文化遗产、艺术表达和社会风貌，广泛涵盖了中国各个民族的风土人情、历史传统、习俗民俗、服饰饮食、音乐舞蹈、手工艺等方面。

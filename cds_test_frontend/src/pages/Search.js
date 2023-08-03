@@ -16,11 +16,16 @@ const SearchBar = () => {
         setQuery(e.target.value)
     }
 
+    const resetStorage = () =>{
+        sessionStorage.removeItem('filterMagazineName');
+        sessionStorage.removeItem('filterStartTime');
+        sessionStorage.removeItem('filterEndTime');
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        sessionStorage.setItem('filterMagazineName', null);
-        sessionStorage.setItem('filterStartTime', null);
-        sessionStorage.setItem('filterEndTime', null);
+        resetStorage();
+        
         history.push(`/results?query=${encodeURIComponent(query)}`);
     }
     return (

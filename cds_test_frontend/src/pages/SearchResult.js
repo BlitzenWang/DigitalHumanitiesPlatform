@@ -159,10 +159,7 @@ const Search = () => {
     const [selectMode, setSelectMode] = useState(false);
     const years = Array.from({ length: 21 }, (_, index) => 1950 + index);
     const pageSize = 20;
-	
-
-    
-
+    const history = useHistory();
 
 
     useEffect(() => {
@@ -175,6 +172,7 @@ const Search = () => {
 
     const getData = async (page) => {
         const trimmedQuery = submittedQuery.trim();
+
         const params = new URLSearchParams({
             keywords: trimmedQuery.replaceAll(' ', '-'),
             page: page,
@@ -214,16 +212,19 @@ const Search = () => {
     };
 
     const handleInputChange = (e) => {
-        setQuery(e.target.value)
+        setQuery(e.target.value);
     }
 
+    const resetStorage = () =>{
+        sessionStorage.removeItem('filterMagazineName');
+        sessionStorage.removeItem('filterStartTime');
+        sessionStorage.removeItem('filterEndTime');
+        sessionStorage.removeItem('currentPage');
+    }
+    
     const handleSubmit = (e) => {
         e.preventDefault();
-		sessionStorage.setItem('currentPage', 1);
-        setSelectedMagazine("default");
-        setStartTime("1950");
-        setEndTime("1970");
-        setSubmittedQuery(query);
+        history.push(`/results?query=${encodeURIComponent(query)}`);
     }
 
     const handlePageChange = (page) => {
@@ -251,10 +252,14 @@ const Search = () => {
             <div className="search-result-page-wrapper">
                 <h2> {totalResults} Results found</h2>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: "20px"}}>
-                    {totalPages>0 && <SelectedFilesSidebar select={selectMode} setSelect={setSelectMode}/>}
+                    {totalPages>0 && 
+                    <div style={{position: 'relative', flex: 1, paddingTop: "20px"}}>
+                        <SelectedFilesSidebar select={selectMode} setSelect={setSelectMode}/>
+                    </div>
+                    }
                     <DisplaySearchRes data={result} totalResults={totalPages * pageSize} query={submittedQuery} selectMode={selectMode} setSelectMode={setSelectMode}/>
-                    <div style={{ flex: 1, paddingTop: "20px"}}>
-                    {totalPages>0 && <SideBar years={years} 
+                    <div style={{position: 'relative', flex: 1, paddingTop: "20px"}}>
+                    {submittedQuery && <SideBar years={years} 
 					currentMagazine={selectedMagazine}
                     filterSelectedMagazine={setSelectedMagazine}
 					currentStart={startTime}

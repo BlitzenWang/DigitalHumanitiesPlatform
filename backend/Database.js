@@ -92,7 +92,6 @@ async function getMagazineByIssue(magazineName, year, issue){
 		AND issue_time = ${"\'".concat(year, "-", issue, "\'")}
 		ORDER BY page_num;
 		`);
-	console.log("\'".concat(year, "-", issue, "\'"));
 	for (let entry of rows[0]){
 		ans[entry.page_num] = entry;
 	}
@@ -126,7 +125,6 @@ async function getMagazineByYear(magazineName, year){
 	}
 	
 	let temp = {};
-	console.log(data);
 	Object.values(data).forEach(item => {
 		let time = item.issue_time
 		if (!temp[time] || item.page_name < temp[time].page_name) {
@@ -192,6 +190,23 @@ async function getBook(bookname){
 	return ans;
 }
 
+async function getPage(issueName, pageNum){
+	let ans = {};
+	const rows = await pool.query(`
+		SELECT id, file_path
+		FROM ExtractedText
+		WHERE issue_name = 
+		${"\'".concat(issueName, "\'")}
+		AND page_num = ${pageNum}
+		LIMIT 1;
+	`);
+	for (let entry of rows[0]){
+		ans[entry.id] = entry;
+	}
+	return Object.values(ans)[0].file_path;
+
+}
+
 router.get("/search", async (req, res) =>  {
 	let keywords = req.query.keywords;
 	let page = req.query.page;
@@ -209,8 +224,18 @@ router.get("/search", async (req, res) =>  {
 		console.log("finished fetching from database!"));
 		res.json({results: ans, total: count});
 		console.log('search code ran! keywords are' + keywords);
+		console.log(req.query);
 	}
 	
+});
+
+router.get("/getPage", async(req, res) =>{
+	let pageName = req.query.pageName;
+	const issueName = pageName.split('_').slice(0, -1).join('_');
+	const pageNum = pageName.split('_').slice(-1);
+	let ans = await getPage(issueName, pageNum).then(console.log(`fetched page ${pageName}`));
+	console.log(ans);
+	res.json(ans);
 });
 
 router.get("/getBook", async (req, res) =>{

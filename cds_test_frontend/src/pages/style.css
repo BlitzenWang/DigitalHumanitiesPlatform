@@ -209,12 +209,13 @@
 
 
 .flipbook-wrapper{
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
-  margin: 0;
+  margin-bottom: 80px;
   padding: 30px;
   box-sizing: border-box;
   gap: 20px;
@@ -288,9 +289,9 @@
 
 .button-container {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  width: 70%;
+  max-width: 272px;
   margin: auto;
 }
 
@@ -582,10 +583,55 @@
 .chat-page-sidebar-container{
   position: absolute;
   top: 50px;
-  left: -300px;
+  left:-20px;
   transition: transform 0.3s;
 }
 
 .chat-page-sidebar-container.open{
   transform: translateX(320px);
+}
+
+
+.page-zoom-in-button{
+
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  color: #353535;
+}
+
+.page-zoom-out-button{
+  
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  color: #353535;
+}
+
+.page-zoom-in-button.disabled,
+.page-zoom-out-button.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+
+.page-display-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  overflow: auto;
+}
+
+.zoom-button-frame{
+  display: flex;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 10px;
+  justify-content: space-between;
+  gap: 20px;
+  
+  border-radius: 5px;
+  background-color: #6e6e6e75;
 }

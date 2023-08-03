@@ -1,4 +1,5 @@
 const express = require("express");
+const fs = require('fs');
 const router = express.Router();
 const {Configuration, OpenAIApi} = require("openai");
 require("dotenv").config();
@@ -9,6 +10,7 @@ const openai = new OpenAIApi(configuration);
 const cors = require('cors');
 const FetchList = require('./FetchListContent');
 const bodyParser = require('body-parser');
+const {encode, decode} = require('gpt-3-encoder')
 
 router.use(bodyParser.json());
 
@@ -32,13 +34,17 @@ router.post('/get-prompt-result', async (req, res) => {
         messages = [...messages, ...listContent.map((magazine, id) => (
             {role: "user", content: `Magazine ${id+1}: ${magazine.content}`}
         ))];
-        messages = [...messages, {role: "user", content: `${prompt}`}]
+        messages = [...messages, {role: "user", content: `${prompt}`}];
+        const encoded = encode(prompt);
+        console.log(`amount of tokens:${encoded.length}`)
+
         // Use the OpenAI SDK to create a completion
         // with the given prompt, model and maximum tokens
         const completion = await openai.createChatCompletion({
             model:'gpt-3.5-turbo-16k', // model name
             messages: messages,
         });
+
         console.log(completion.data.choices[0].message);
         // Send the generated text as the response
         res.json({chatgpt_response: completion.data.choices[0].message.content});

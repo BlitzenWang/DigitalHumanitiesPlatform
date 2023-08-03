@@ -4,10 +4,10 @@ import './style.css';
 
 
 
-function Page({ bookName, image, page }) {
+function Page({ url, image, page }) {
   return (
     	<div>
-		<a href = {`/book/${bookName}/page/${page}`}>
+		<a href = {`/Gallery/${url}/${page}`}>
 			<img className="Cover" src={image} loading="lazy" alt={'Cover'} />
 		</a>
       	
@@ -22,8 +22,7 @@ function Page({ bookName, image, page }) {
 function GalleryLayerPage() {
   	const {magazineName, year, issue} = useParams();
   	const [magazineData, setmagazineData] = useState();
-	const bookname = magazineName.concat('_', year, '_', issue);
-	console.log(bookname);
+	const url = magazineName.concat('/', year, '/', issue);
 
   	const fetchData = async () => {
 		const response = await fetch(`http://localhost:5000/database/getMagazine?magazineName=${magazineName}&year=${year}&issue=${issue}`);
@@ -45,7 +44,7 @@ function GalleryLayerPage() {
 		<div className="Canvas">
 			<div className="MagazineContainer">
 			{magazineData && magazineData.map((item, index) => (
-				<Page key={index} bookName = {bookname} image={`http://localhost:5000/fetch_file/${item.file_path}`} page={item.page_num} />
+				<Page key={index} url = {url} image={`http://localhost:5000/fetch_file/${item.file_path}`} page={item.page_num} />
 			))}
 			</div>
 		</div>
