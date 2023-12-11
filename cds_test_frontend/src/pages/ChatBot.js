@@ -125,8 +125,6 @@ const ChatBot = () => {
 		updateResponse(uniqueId, {
 			response: data.chatgpt_response,
 		});
-
-
       setPromptToRetry(null);
       setUniqueIdToRetry(null);
     } catch (err) {

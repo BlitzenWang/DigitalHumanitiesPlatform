@@ -11,6 +11,10 @@ const cors = require('cors');
 const FetchList = require('./FetchListContent');
 const bodyParser = require('body-parser');
 const {encode, decode} = require('gpt-3-encoder')
+const modelNameMap = {
+        "gpt-3.5": "gpt-3.5-turbo-1106",
+        "gpt-4": "gpt-4-32k"
+    }
 
 router.use(bodyParser.json());
 
@@ -18,14 +22,14 @@ router.use(bodyParser.json());
 router.use(cors());
 
 router.post('/get-prompt-result', async (req, res) => {
-    // Get the prompt from the request body
+    // Get the prompt from the request bodygpt-4-1106-preview
     const { prompt, model = 'gpt', magazineList } = req.body;
     // Check if prompt is present in the request
     if (!prompt) {
         // Send a 400 status code and a message indicating that the prompt is missing
         return res.status(400).send({error: 'Prompt is missing in the request'});
     }
-
+    
     const listContent = await FetchList.fetchContent(magazineList);
 
     try {
@@ -41,7 +45,7 @@ router.post('/get-prompt-result', async (req, res) => {
         // Use the OpenAI SDK to create a completion
         // with the given prompt, model and maximum tokens
         const completion = await openai.createChatCompletion({
-            model:'gpt-3.5-turbo-16k', // model name
+            model:modelNameMap[model], // model name
             messages: messages,
         });
 
@@ -55,13 +59,5 @@ router.post('/get-prompt-result', async (req, res) => {
         return res.status(500).send(errorMsg);
     }
 });
-
-
-
-
-
-
-
-
 
 module.exports = router
