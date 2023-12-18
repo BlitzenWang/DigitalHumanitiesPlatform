@@ -16,7 +16,6 @@ const pool = mysql.createPool({
 	database: 'test'
 }).promise();
 
-
 async function getSearchCount(keywords){
 	
     for(let key of keywords){

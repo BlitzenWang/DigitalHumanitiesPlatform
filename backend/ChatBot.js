@@ -34,7 +34,7 @@ router.post('/get-prompt-result', async (req, res) => {
 
     try {
         let messages=[{role: "system", content: "You are a specialist at Chinese Magazines. Respond with markdown format."},
-                        {role: "user", content: "I will present you the text from a number of magazines. Read the content, and answer my questions."}];
+                        {role: "user", content: "I will present you the text from a number of magazines. Read the content, and answer my questions in both english and Chinese. Answer first in english, and then repeat once in Chinese."}];
         messages = [...messages, ...listContent.map((magazine, id) => (
             {role: "user", content: `Magazine ${id+1}: ${magazine.content}`}
         ))];

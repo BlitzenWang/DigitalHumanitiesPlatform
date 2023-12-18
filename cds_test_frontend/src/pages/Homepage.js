@@ -27,15 +27,7 @@ function Homepage(props) {
       <div className="HomepageFrame">
         <div className="HomepageTileTextBackground">Magazine Gallery</div>
         <div className="HomepageMazineContainer">
-          <div className="HomepageMagazine">
-            <a href="http://localhost:3000/Gallery/JFJHB">
-              <img className="HomepageMagazineCover" src={Rectangle1Image} loading="lazy" alt="Rectangle 1" />
-            </a>
-            <div className="HomepageMagazineTitle">解放军画报</div>
-            <div className="HomepageMagazineInfo">
-              解放军画报于1951年2月创刊，由毛泽东主席亲笔题写刊名。其前身是红军时期的《红星画报》、抗日战争时期的《晋察冀画报》和解放战争时期的《华北画报》。邓小平、江泽民多次接受本刊记者采访拍摄。
-            </div>
-          </div>
+          
           <div className="HomepageMagazine">
             <a href="http://localhost:3000/Gallery/RMHB">
               <img className="HomepageMagazineCover" src={Rectangle3Image} loading="lazy" alt="Rectangle 3" />
@@ -43,6 +35,15 @@ function Homepage(props) {
             <div className="HomepageMagazineTitle">人民画报</div>
             <div className="HomepageMagazineInfo">
               《人民画报》创刊于1950年7月，是一本以图片报道为主、图文并茂的中华人民共和国国家级综合性画报，为月刊，内容以宣传中国现代建设成就为主。《人民画报》自创办起从未停刊，文化大革命中也照常出版。
+            </div>
+          </div>
+          <div className="HomepageMagazine">
+            <a href="http://localhost:3000/Gallery/JFJHB">
+              <img className="HomepageMagazineCover" src={Rectangle1Image} loading="lazy" alt="Rectangle 1" />
+            </a>
+            <div className="HomepageMagazineTitle">解放军画报</div>
+            <div className="HomepageMagazineInfo">
+              解放军画报于1951年2月创刊，由毛泽东主席亲笔题写刊名。其前身是红军时期的《红星画报》、抗日战争时期的《晋察冀画报》和解放战争时期的《华北画报》。邓小平、江泽民多次接受本刊记者采访拍摄。
             </div>
           </div>
           <div className="HomepageMagazine">
