@@ -171,6 +171,7 @@ const Search = () => {
 
 
     const getData = async (page) => {
+        console.log(submittedQuery);
         const trimmedQuery = submittedQuery.trim();
 
         const params = new URLSearchParams({
@@ -211,7 +212,7 @@ const Search = () => {
         }
     };
 
-    const handleInputChange = (e) => {
+    const  handleInputChange = (e) => {
         setQuery(e.target.value);
     }
 
