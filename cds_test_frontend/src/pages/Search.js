@@ -17,6 +17,7 @@ const SearchBar = () => {
     }
 
     const resetStorage = () =>{
+        /*Empties session storage for new query */
         sessionStorage.removeItem('filterMagazineName');
         sessionStorage.removeItem('filterStartTime');
         sessionStorage.removeItem('filterEndTime');

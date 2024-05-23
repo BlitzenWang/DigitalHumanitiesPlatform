@@ -196,6 +196,7 @@ const Search = () => {
             if (data === 'error') {
                 throw new Error('invalid keywords');
             }
+            /*Retains information when user leaves search page*/
             sessionStorage.setItem('searchQuery', JSON.stringify(submittedQuery));
             sessionStorage.setItem('currentPage', page);
             

@@ -229,6 +229,7 @@ router.get("/search", async (req, res) =>  {
 	
 });
 
+//gets specific page on request
 router.get("/getPage", async(req, res) =>{
 	let pageName = req.query.pageName;
 	const issueName = pageName.split('_').slice(0, -1).join('_');
@@ -238,11 +239,15 @@ router.get("/getPage", async(req, res) =>{
 	res.json(ans);
 });
 
+//gets specific issue on request
+
 router.get("/getBook", async (req, res) =>{
 	let bookName = req.query.bookName;
 	let ans = await getBook(bookName).then(console.log(`fetched book ${bookName}`));
 	res.json(ans);
 });
+
+//gets specific magazine on request
 
 router.get("/getMagazine", async (req, res) =>{
 	let magazineName = req.query.magazineName;

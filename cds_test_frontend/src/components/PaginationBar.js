@@ -1,3 +1,7 @@
+/*
+Provides pagination in search result page
+*/ 
+
 import React from 'react';
 import { ChevronsLeft, ChevronsRight, ChevronLeft, ChevronRight } from 'react-feather';
 
@@ -6,8 +10,9 @@ function getCurrentPages(totalPages, currentPage) {
     let subArray;
 
     if (len <= 10) {
-        return totalPages; // return original array if size <= 10
+        return totalPages; 
     } else {
+        //correctly displays current page in bar
         if (currentPage < 5) {
             subArray = totalPages.slice(0, 10);
         } else if (currentPage >= len - 5) {
